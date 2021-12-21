@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+env:
+  BUNDLE_ID: ${{ secrets.BUNDLE_ID }}
+  TEAM_ID: ${{ secrets.TEAM_ID }}
+  CERT_P12: ${{ secrets.CERT_P12 }}
+  MOBILE_PROVISION: ${{ secrets.MOBILEPROVISION_BASE64 }}
+  CODE_SIGNING_IDEDNTITY: ${{ secrets.CODE_SIGNING_IDENTITY }}
+  APPSTORE_ISSUER_ID: ${{ secrets.APPCONNECT_API_ISSUER }}
+  APPSTORE_API_KEY_ID: ${{ secrets.APPCONNECT_API_KEY_ID }}
+  APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPCONNECT_API_KEY_PRIVATE }}
+
+jobs:
+  ios:
+    name: IOS
+    runs-on: macos-latest
+    needs: prepeare
+    steps:
+      - name: checkout sourcea
+        uses: actions/checkout@v2
+
+      - name: setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Change IOS Environment
+        run: node ${{ github.workspace }}/.github/scripts/ios-prepeare.js $BUNDLE_ID ${{ needs.prepeare.outputs.BUILD_NUMBER }}
+
+      - name: Build IPA
+        uses: yukiarrr/ios-build-action@v1.5.0
+        with:
+          project-path: Visario_iOS.xcodeproj
+          workspace-path: Visario_iOS.xcworkspace
+          p12-base64: ${{ env.CERT_P12 }}
+          mobileprovision-base64: ${{ env.MOBILE_PROVISION }}
+          code-signing-identity: ${{ env.CODE_SIGNING_IDEDNTITY }}
+          team-id: ${{ env.TEAM_ID }}
+
+      - name: Upload app to TestFlight
+        uses: apple-actions/upload-testflight-build@v1
+        with:
+          app-path: ${{ github.workspace }}/output.ipa
+          issuer-id: ${{ env.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ env.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ env.APPSTORE_API_PRIVATE_KEY }}
