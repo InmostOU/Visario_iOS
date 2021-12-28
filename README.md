@@ -28,3 +28,9 @@ The Visario project is an example of the implementation of a communication platf
 **User Profile:**
 - View account info (photo, first and last name, username, phone number, email, about, date of birth)
 - Change profile photo (from gallery or camera)
+-------------------------------------------------------------
+
+**For Run**
+- Put to project root folder AmazonChime binaries (4 folders) from: https://github.com/aws/amazon-chime-sdk-ios/releases
+- Run pod install
+- Enjoy :)
