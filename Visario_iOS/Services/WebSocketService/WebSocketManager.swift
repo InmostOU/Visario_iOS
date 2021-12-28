@@ -14,16 +14,17 @@ final class WebSocketManager {
     
     private var webSocketTask: URLSessionWebSocketTask?
     
-    func connectToWebSocket(with url: String) {
+    func setupWebSocket(with url: String) {
         guard let webSocketURL = URL(string: url) else { return }
         webSocketTask = URLSession.shared.webSocketTask(with: webSocketURL)
         webSocketTask?.resume()
     }
     
-    func receiveData(callback: @escaping (Result<AmazonMessageModel, Error>) -> Void) {
+    func connectToWebSocket(callback: @escaping (Result<AmazonMessage, Error>) -> Void) {
         guard let webSocketTask = webSocketTask else { return }
         
-        webSocketTask.receive { response in
+        webSocketTask.receive { [weak self] response in
+            guard let self = self else { return }
             switch response {
             case .failure(let error):
                 print("Error receiving message!, \(error.localizedDescription)")
@@ -32,7 +33,7 @@ final class WebSocketManager {
                 case .string(let text):
                     guard let data = self.validJSONString(from: text).data(using: .utf8) else { return }
                     do {
-                        let amazonMessageModel = try JSONDecoder().decode(AmazonMessageModel.self, from: data)
+                        let amazonMessageModel = try JSONDecoder().decode(AmazonMessage.self, from: data)
                         callback(.success(amazonMessageModel))
                     } catch {
                         callback(.failure(error))
@@ -47,17 +48,13 @@ final class WebSocketManager {
     }
     
     private func validJSONString(from text: String) -> String {
-        let withoutBackSlashes = text.replacingOccurrences(of: "\\", with: "")
-        let withoutLeadingQuoetes = withoutBackSlashes.replacingOccurrences(of: "\"{", with: "{")
-        let validJSONString = withoutLeadingQuoetes.replacingOccurrences(of: "}\"", with: "}")
-        return validJSONString
-    }
-    
-    private func decode<T: Decodable>(data: Data) -> T? {
-        do {
-            return try JSONDecoder().decode(T.self, from: data)
-        } catch {
-            return nil
-        }
+        let uniqueID = UUID().uuidString
+        let text0 = text.replacingOccurrences(of: "\\u0026", with: "&")
+        let text1 = text0.replacingOccurrences(of: "\\n", with: uniqueID)
+        let text2 = text1.replacingOccurrences(of: "\\", with: "")
+        let text3 = text2.replacingOccurrences(of: "\"{", with: "{")
+        let text4 = text3.replacingOccurrences(of: "}\"", with: "}")
+        let text5 = text4.replacingOccurrences(of: uniqueID, with: "\\n")
+        return text5
     }
 }

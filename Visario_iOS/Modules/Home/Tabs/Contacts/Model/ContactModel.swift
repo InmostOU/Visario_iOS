@@ -7,6 +7,17 @@
 
 import Foundation
 
+struct ContactsActivityStatusDataWrapper: Decodable {
+    let data: [ContactActivityModel]
+}
+
+struct ContactActivityModel: Decodable {
+    let id: Int
+    let userArn: String
+    let status: String
+    let lastSeen: Int
+}
+
 struct ContactDataWrapper: Decodable {
     let status: Int
     let message: String
@@ -23,7 +34,7 @@ struct ContactModel: Decodable {
     let phoneNumber: String
     let image: String
     let about: String
-    let online: Bool
+    var online: Bool?
     let favorite: Bool
     let muted: Bool
     let inMyContacts: Bool

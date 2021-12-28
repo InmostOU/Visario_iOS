@@ -72,15 +72,8 @@ final class RegistrationViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.alwaysBounceVertical = true
         scrollView.showsVerticalScrollIndicator = false
-        scrollView.bounces = false
         return scrollView
-    }()
-    
-    private lazy var containerView: UIView = {
-        let view = UIView()
-        return view
     }()
     
     private lazy var titleLabel: UILabel = {
@@ -166,8 +159,12 @@ final class RegistrationViewController: UIViewController {
         textField.layer.masksToBounds = true
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.gray.cgColor
+        
+        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+        rightView.addSubview(passwordEyeButton)
+        
+        textField.rightView = rightView
         textField.rightViewMode = .always
-        textField.rightView = passwordEyeButton
         textField.delegate = self
         textField.tag = FieldTag.password.index
         return textField
@@ -182,8 +179,12 @@ final class RegistrationViewController: UIViewController {
         textField.layer.masksToBounds = true
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.gray.cgColor
+        
+        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+        rightView.addSubview(confirmPasswordEyeButton)
+        
+        textField.rightView = rightView
         textField.rightViewMode = .always
-        textField.rightView = confirmPasswordEyeButton
         textField.delegate = self
         textField.tag = FieldTag.confirmPassword.index
         return textField
@@ -206,6 +207,7 @@ final class RegistrationViewController: UIViewController {
     
     private lazy var passwordEyeButton: UIButton = {
         let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 35, height: 30)
         button.addTarget(self, action: #selector(passwordEyeButtonTapped), for: .touchUpInside)
         button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         button.tintColor = .black
@@ -215,6 +217,7 @@ final class RegistrationViewController: UIViewController {
     
     private lazy var confirmPasswordEyeButton: UIButton = {
         let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 35, height: 30)
         button.addTarget(self, action: #selector(confirmPasswordEyeButtonTapped), for: .touchUpInside)
         button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         button.tintColor = .black
@@ -277,24 +280,18 @@ final class RegistrationViewController: UIViewController {
         dateOfBirthTextField.inputAccessoryView = toolBar
         
         view.addSubview(scrollView)
-        scrollView.addSubview(containerView)
-        containerView.addSubviews(titleLabel, fieldsStackView, registerButton)
+        scrollView.addSubviews(titleLabel, fieldsStackView, registerButton)
         
         fieldsStackView.addArrangedSubviews(usernameTextField, emailTextField, firstNameTextField, lastNameTextField, dateOfBirthTextField, passwordTextField, confirmPasswordTextField)
     }
     
     private func configureConstraints() {
         scrollView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.top.bottom.equalTo(view.layoutMarginsGuide)
-        }
-        containerView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-            $0.width.height.equalToSuperview()
         }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(containerView).offset(20)
-            $0.centerX.equalTo(containerView)
+            $0.top.equalTo(scrollView).offset(20)
+            $0.centerX.equalToSuperview()
         }
         fieldsStackView.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(40)
@@ -328,19 +325,12 @@ final class RegistrationViewController: UIViewController {
             $0.height.equalTo(usernameTextField)
             $0.leading.trailing.equalToSuperview()
         }
-        passwordEyeButton.snp.makeConstraints {
-            $0.height.equalTo(25)
-            $0.width.equalTo(passwordEyeButton.snp.height).multipliedBy(2.4)
-        }
-        confirmPasswordEyeButton.snp.makeConstraints {
-            $0.height.equalTo(25)
-            $0.width.equalTo(confirmPasswordEyeButton.snp.height).multipliedBy(2.4)
-        }
         registerButton.snp.makeConstraints {
             $0.top.equalTo(fieldsStackView.snp.bottom).offset(50)
             $0.height.equalTo(40)
             $0.width.equalTo(150)
             $0.centerX.equalTo(fieldsStackView)
+            $0.bottom.equalToSuperview().inset(20)
         }
     }
     
@@ -516,12 +506,14 @@ final class RegistrationViewController: UIViewController {
     @objc private func keyboardWillShow(_ notification: Notification) {
         let userInfo = notification.userInfo
         let keyboardHeight = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
-        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight + 20, right: 0)
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
         scrollView.contentInset = contentInsets
+        
         var viewRect = view.frame
         viewRect.size.height -= keyboardHeight
         guard let activeTextField = activeTextField else { return }
-        if !viewRect.contains(activeTextField.frame.origin) {
+        
+        if viewRect.contains(activeTextField.frame.origin) {
             let destinationPoint = CGPoint(x: 0, y: activeTextField.frame.origin.y - keyboardHeight)
             scrollView.setContentOffset(destinationPoint, animated: true)
         }
@@ -569,10 +561,5 @@ extension RegistrationViewController: UITextFieldDelegate {
         alignFieldsStackSpacing()
         return true
     }
-}
-
-// MARK: - BaseView
-
-extension RegistrationViewController: BaseView {
     
 }

@@ -33,4 +33,22 @@ extension String {
         return lastFirstNamePredicate.evaluate(with: self)
     }
     
+    func isTextFileType() -> Bool {
+        for textFileType in SupportedTextFileType.allCases.map(\.rawValue) {
+            if self.contains(textFileType) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func isAudioFileType() -> Bool {
+        for audioFileType in SupportedAudioFileType.allCases.map(\.rawValue) {
+            if self.contains(audioFileType) {
+                return true
+            }
+        }
+        return false
+    }
+    
 }

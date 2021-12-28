@@ -6,20 +6,23 @@
 //
 
 import SnapKit
-
-enum OnlineState: String {
-    case online
-    case offline
-}
+import SDWebImage
 
 class ContactTableViewCell: UITableViewCell {
+    
+    // MARK: Properties
+    
+    private let iconImageWidth: CGFloat = 50.0
     
     // MARK: - UI Elements
     
     lazy var iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.crop.circle")
-        imageView.tintColor = .black
+        imageView.layer.cornerRadius = iconImageWidth / 2
+        imageView.layer.masksToBounds = true
+        imageView.tintColor = .gray
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -55,10 +58,9 @@ class ContactTableViewCell: UITableViewCell {
     
     private func addConstraints() {
         iconImageView.snp.makeConstraints {
-            $0.top.equalTo(15)
-            $0.bottom.equalTo(-15)
+            $0.centerY.equalToSuperview()
             $0.leading.equalTo(contentView.layoutMarginsGuide)
-            $0.width.equalTo(iconImageView.snp.height)
+            $0.width.height.equalTo(iconImageWidth)
         }
         
         titleLabel.snp.makeConstraints {
@@ -75,12 +77,15 @@ class ContactTableViewCell: UITableViewCell {
     
     func fill(with contact: ContactModel) {
         titleLabel.text = contact.username
+        iconImageView.sd_setImage(with: URL(string: contact.image), placeholderImage: UIImage(systemName: "person.crop.circle"))
         
-        switch contact.muted {
+        switch contact.online ?? false {
         case true:
-            subtitleLabel.text = OnlineState.offline.rawValue
+            subtitleLabel.text = "online"
+            subtitleLabel.textColor = .systemGreen
         case false:
-            subtitleLabel.text = OnlineState.online.rawValue
+            subtitleLabel.text = "offline"
+            subtitleLabel.textColor = .gray
         }
     }
 }

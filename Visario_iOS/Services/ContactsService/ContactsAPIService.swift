@@ -86,6 +86,46 @@ final class ContactsAPIService {
         }
     }
     
+    func editContact(id: Int, firstName: String, lastName: String, callback: @escaping (Result<AuthDataModel, Error>) -> Void) {
+        contactsProvider.request(.editContact(id: id, firstName: firstName, lastName: lastName)) { response in
+            switch response {
+            case .success(let response):
+                guard response.statusCode == 200 else {
+                    callback(.failure(NetworkError.statusCode))
+                    return
+                }
+                do {
+                    let data = try JSONDecoder().decode(AuthDataModel.self, from: response.data)
+                    callback(.success(data))
+                } catch {
+                    callback(.failure(error))
+                }
+            case .failure(let error):
+                callback(.failure(error))
+            }
+        }
+    }
+    
+    func getContactsActivityStatus(by userArn: String, callback: @escaping (Result<[ContactActivityModel], Error>) -> Void) {
+        contactsProvider.request(.getContactsActivityStatus(userArn: userArn)) { response in
+            switch response {
+            case .success(let response):
+                guard response.statusCode == 200 else {
+                    callback(.failure(NetworkError.statusCode))
+                    return
+                }
+                do {
+                    let json = try JSONDecoder().decode(ContactsActivityStatusDataWrapper.self, from: response.data)
+                    callback(.success(json.data))
+                } catch {
+                    callback(.failure(error))
+                }
+            case .failure(let error):
+                callback(.failure(error))
+            }
+        }
+    }
+    
     func updateProfile(firstName: String, lastName: String, username: String, birthday: Int, about: String, showEmailTo: String, showPhoneNumberTo: String, callback: @escaping (Result<AuthDataModel, Error>) -> Void) {
         
         contactsProvider.request(.updateProfile(firstName: firstName, lastName: lastName, username: username, birthday: birthday, about: about, showEmailTo: showEmailTo, showPhoneNumberTo: showPhoneNumberTo)) { response in
@@ -114,26 +154,6 @@ final class ContactsAPIService {
                 do {
                     let profile = try JSONDecoder().decode(ProfileModel.self, from: response.data)
                     callback(.success(profile))
-                } catch {
-                    callback(.failure(error))
-                }
-            case .failure(let error):
-                callback(.failure(error))
-            }
-        }
-    }
-    
-    func editContact(id: Int, firstName: String, lastName: String, callback: @escaping (Result<AuthDataModel, Error>) -> Void) {
-        contactsProvider.request(.editContact(id: id, firstName: firstName, lastName: lastName)) { response in
-            switch response {
-            case .success(let response):
-                guard response.statusCode == 200 else {
-                    callback(.failure(NetworkError.statusCode))
-                    return
-                }
-                do {
-                    let data = try JSONDecoder().decode(AuthDataModel.self, from: response.data)
-                    callback(.success(data))
                 } catch {
                     callback(.failure(error))
                 }

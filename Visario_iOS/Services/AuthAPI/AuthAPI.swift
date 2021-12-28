@@ -16,11 +16,17 @@ enum AuthAPI {
                   matchingPassword: String,
                   email: String)
     case login(email: String, password: String)
+    case changePassword(oldPass: String, newPass: String, repeatPass: String)
+    case forgotPassword(email: String)
 }
 
 // MARK: - TargetType
 
 extension AuthAPI: TargetType {
+    
+    private var authToken: String {
+        KeyChainStorage.shared.getAccessToken() ?? ""
+    }
     
     var baseURL: URL {
         return URL(string: Constants.authURL)!
@@ -28,15 +34,24 @@ extension AuthAPI: TargetType {
     
     var path: String {
         switch self {
-        case .login(_, _):
+        case .login:
             return Constants.loginPath
         case .register:
             return Constants.registerPath
+        case .changePassword:
+            return Constants.changePasswordPath
+        case .forgotPassword:
+            return Constants.forgotPasswordPath
         }
     }
     
     var method: Method {
-        return .post
+        switch self {
+        case .forgotPassword:
+            return .get
+        default:
+            return .post
+        }
     }
     
     var sampleData: Data {
@@ -47,15 +62,30 @@ extension AuthAPI: TargetType {
             
         case .login(let email, let password):
             return "{\"email\" : \"\(email)\", \"password\" : \"\(password)\"}".data(using: .utf8) ?? Data()
+        case .changePassword(let oldPass, let newPass, let repeatPass):
+            return "{\"oldPassword\" : \"\(oldPass)\", \"newPassword\" : \"\(newPass)\", \"matchingPassword\" : \"\(repeatPass)\"}".data(using: .utf8) ?? Data()
+        case .forgotPassword:
+            return Data()
         }
     }
     
     var task: Task {
-        return .requestData(sampleData)
+        switch self {
+        case .forgotPassword(let email):
+            return .requestParameters(parameters: ["email":email], encoding: URLEncoding.default)
+        default:
+            return .requestData(sampleData)
+        }
     }
     
     var headers: [String : String]? {
-        return ["Content-type" : "application/json"]
+        switch self {
+        case .changePassword:
+            return ["Authorization" : authToken,
+                    "Content-Type" : "application/json"]
+        default:
+            return ["Content-type" : "application/json"]
+        }
     }
     
 }

@@ -6,18 +6,37 @@
 //
 
 import UIKit
+import ReplayKit
 
-final class MeetingViewController: UIViewController {
+protocol MeetingView {
+    func reloadCollectionAnimated()
+    func getCell(by attendeeId: String) -> ParticipantCollectionViewCell?
+}
+
+final class MeetingViewController: UIViewController, MeetingView {
+    
+    // MARK: - Properties
     
     private let declineButtonWidth: CGFloat = 40.0
-    private var participants = [ContactModel]()
+    private let meetingViewModel: MeetingViewModel
+    private let channelsViewModel = ChannelsViewModel()
+    
+    // MARK: - UI Elements
     
     private lazy var participantsCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: MeetingsLayout())
         collection.register(ParticipantCollectionViewCell.self, forCellWithReuseIdentifier: ParticipantCollectionViewCell.identifier)
         collection.isScrollEnabled = false
         collection.dataSource = self
+        collection.backgroundColor = .darkGray
         return collection
+    }()
+    
+    private lazy var controllButtonsStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 10
+        return stack
     }()
     
     private lazy var declineButton: UIButton = {
@@ -25,20 +44,23 @@ final class MeetingViewController: UIViewController {
         declineButton.backgroundColor = .systemRed
         declineButton.tintColor = .white
         declineButton.setImage(UIImage(systemName: "phone.down"), for: .normal)
-        declineButton.layer.cornerRadius = declineButtonWidth / 2.0
+        declineButton.layer.cornerRadius = declineButtonWidth / 2
         declineButton.layer.masksToBounds = false
         declineButton.clipsToBounds = true
+        declineButton.addTarget(self, action: #selector(declineButtonTapped), for: .touchUpInside)
         return declineButton
     }()
     
     private lazy var muteButton: UIButton = {
         let muteButton = UIButton()
-        muteButton.backgroundColor = .systemRed
+        muteButton.backgroundColor = .lightGray
         muteButton.tintColor = .white
-        muteButton.setImage(UIImage(systemName: "mic.slash"), for: .normal)
-        muteButton.layer.cornerRadius = declineButtonWidth / 2.0
+        muteButton.setImage(UIImage(systemName: "mic"), for: .normal)
+        muteButton.setImage(UIImage(systemName: "mic.slash"), for: .selected)
+        muteButton.layer.cornerRadius = declineButtonWidth / 2
         muteButton.layer.masksToBounds = false
         muteButton.clipsToBounds = true
+        muteButton.addTarget(self, action: #selector(muteButtonTapped), for: .touchUpInside)
         return muteButton
     }()
     
@@ -46,19 +68,21 @@ final class MeetingViewController: UIViewController {
         let enableVideoButton = UIButton()
         enableVideoButton.backgroundColor = .systemRed
         enableVideoButton.tintColor = .white
-        enableVideoButton.setImage(UIImage(systemName: "video"), for: .normal)
-        enableVideoButton.layer.cornerRadius = declineButtonWidth / 2.0
+        enableVideoButton.setImage(UIImage(systemName: "video.slash"), for: .normal)
+        enableVideoButton.layer.cornerRadius = declineButtonWidth / 2
         enableVideoButton.layer.masksToBounds = false
         enableVideoButton.clipsToBounds = true
+        enableVideoButton.addTarget(self, action: #selector(enableVideoButtonTapped), for: .touchUpInside)
         return enableVideoButton
     }()
     
+    // not used yet
     private lazy var shareScreenButton: UIButton = {
         let shareScreenButton = UIButton()
-        shareScreenButton.backgroundColor = .systemRed
+        shareScreenButton.backgroundColor = .lightGray
         shareScreenButton.tintColor = .white
         shareScreenButton.setImage(UIImage(systemName: "rectangle.on.rectangle"), for: .normal)
-        shareScreenButton.layer.cornerRadius = declineButtonWidth / 2.0
+        shareScreenButton.layer.cornerRadius = declineButtonWidth / 2
         shareScreenButton.layer.masksToBounds = false
         shareScreenButton.clipsToBounds = true
         return shareScreenButton
@@ -66,60 +90,121 @@ final class MeetingViewController: UIViewController {
     
     private lazy var handUpButton: UIButton = {
         let handUpButton = UIButton()
-        handUpButton.backgroundColor = .systemRed
+        handUpButton.backgroundColor = .lightGray
         handUpButton.tintColor = .white
         handUpButton.setImage(UIImage(systemName: "hand.raised"), for: .normal)
-        handUpButton.layer.cornerRadius = declineButtonWidth / 2.0
+        handUpButton.layer.cornerRadius = declineButtonWidth / 2
         handUpButton.layer.masksToBounds = false
         handUpButton.clipsToBounds = true
         return handUpButton
     }()
+    
+    private lazy var pickerView: RPSystemBroadcastPickerView = {
+        let pickerView = RPSystemBroadcastPickerView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        pickerView.preferredExtension = "com.Visario-iOS.Visario-UploadBroadcastExtension"
+        pickerView.showsMicrophoneButton = false
+        pickerView.backgroundColor = .systemGray
+        pickerView.layer.cornerRadius = declineButtonWidth / 2
+        pickerView.layer.masksToBounds = false
+        pickerView.clipsToBounds = true
+        return pickerView
+    }()
+    
+    private lazy var chatButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .gray
+        button.tintColor = .white
+        button.setImage(UIImage(systemName: "message"), for: .normal)
+        button.layer.cornerRadius = declineButtonWidth / 2
+        button.layer.masksToBounds = false
+        button.addTarget(self, action: #selector(chatButtonTapped), for: .touchUpInside)
+        button.clipsToBounds = true
+        return button
+    }()
+    
+    init(viewModel: MeetingViewModel) {
+        self.meetingViewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+        
+        viewModel.view = self
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .black
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(uiTapped))
-        view.addGestureRecognizer(tap)
-        
-        let ltap = UILongPressGestureRecognizer(target: self, action: #selector(uiLongTapped))
-        view.addGestureRecognizer(ltap)
-        
         setupViews()
         configureLayout()
+        participantsCollectionView.reloadData()
     }
     
     @objc
-    private func uiTapped() {
-        let p1 = ContactModel(id: 123, userArn: "asd", firstName: "Konstatin", lastName: "Deulin", username: "knstd", email: "knstd@gmail.com", phoneNumber: "+380895754752", image: "", about: "software dev", online: true, favorite: true, muted: false, inMyContacts: false)
-        participants.append(p1)
+    private func muteButtonTapped() {
+        meetingViewModel.muteAudio()
         
-//        for i in 0 ..< participantsCollectionView.numberOfItems(inSection: 0) {
-//            participantsCollectionView.reloadItems(at: [IndexPath(item: i, section: 0)])
-//        }
-        participantsCollectionView.insertItems(at: [IndexPath(item: 1, section: 0)])
-       
+        if meetingViewModel.isMuted {
+            muteButton.setImage(UIImage(systemName: "mic.slash"), for: .normal)
+            muteButton.backgroundColor = .systemRed
+        } else {
+            muteButton.setImage(UIImage(systemName: "mic"), for: .normal)
+            muteButton.backgroundColor = .lightGray
+        }
     }
     
     @objc
-    func uiLongTapped() {
-        participants.removeLast()
-        participantsCollectionView.deleteItems(at: [IndexPath(item: 1, section: 0)])
+    private func enableVideoButtonTapped() {
+        if !meetingViewModel.videoEnabled {
+            meetingViewModel.enableVideo()
+            enableVideoButton.setImage(UIImage(systemName: "video"), for: .normal)
+            enableVideoButton.backgroundColor = .lightGray
+        } else {
+            meetingViewModel.disableVideo()
+            enableVideoButton.setImage(UIImage(systemName: "video.slash"), for: .normal)
+            enableVideoButton.backgroundColor = .systemRed
+        }
+    }
+    
+    @objc
+    private func declineButtonTapped() {
+        meetingViewModel.exitMeeting()
+        dismiss(animated: true)
+    }
+    
+    @objc
+    private func chatButtonTapped() {
+        let meetingChatViewController = MeetingChatViewController(viewModel: meetingViewModel)
+        let meetingChatNavController = UINavigationController(rootViewController: meetingChatViewController)
+        present(meetingChatNavController, animated: true)
+    }
+    
+    func reloadCollectionAnimated() {
+        participantsCollectionView.reloadSections(IndexSet(integer: 0))
+    }
+    
+    func getCell(by attendeeId: String) -> ParticipantCollectionViewCell? {
+        for i in meetingViewModel.participants.indices {
+            if meetingViewModel.participants[i].attendeeId == attendeeId {
+                return participantsCollectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? ParticipantCollectionViewCell
+            }
+        }
+        return nil
     }
     
     private func setupViews() {
-        
-        participants.append(contentsOf: ContactModel.mock(count: 3))
-        
         view.addSubview(participantsCollectionView)
-        view.addSubview(declineButton)
-        view.addSubview(muteButton)
-        view.addSubview(enableVideoButton)
-        view.addSubview(shareScreenButton)
-        view.addSubview(handUpButton)
+        view.addSubview(controllButtonsStackView)
         
-        participantsCollectionView.reloadData()
+        controllButtonsStackView.addArrangedSubview(pickerView)
+        controllButtonsStackView.addArrangedSubview(chatButton)
+        controllButtonsStackView.addArrangedSubview(enableVideoButton)
+        controllButtonsStackView.addArrangedSubview(muteButton)
+        controllButtonsStackView.addArrangedSubview(handUpButton)
+        controllButtonsStackView.addArrangedSubview(declineButton)
     }
     
     private func configureLayout() {
@@ -127,35 +212,30 @@ final class MeetingViewController: UIViewController {
             $0.leading.trailing.bottom.equalToSuperview()
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
-        
+        controllButtonsStackView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-30)
+        }
         muteButton.snp.makeConstraints {
             $0.width.height.equalTo(declineButtonWidth)
-            $0.bottom.equalToSuperview().offset(-30)
-            $0.centerX.equalToSuperview()
         }
-        
         handUpButton.snp.makeConstraints {
             $0.width.height.equalTo(declineButtonWidth)
-            $0.bottom.equalTo(muteButton.snp.bottom)
-            $0.leading.equalTo(muteButton).offset(50)
         }
-        
         declineButton.snp.makeConstraints {
             $0.width.height.equalTo(declineButtonWidth)
-            $0.bottom.equalTo(muteButton.snp.bottom)
-            $0.leading.equalTo(handUpButton).offset(50)
         }
-        
         enableVideoButton.snp.makeConstraints {
             $0.width.height.equalTo(declineButtonWidth)
-            $0.bottom.equalTo(muteButton.snp.bottom)
-            $0.leading.equalTo(muteButton).offset(-50)
         }
-        
         shareScreenButton.snp.makeConstraints {
             $0.width.height.equalTo(declineButtonWidth)
-            $0.bottom.equalTo(muteButton.snp.bottom)
-            $0.leading.equalTo(enableVideoButton).offset(-50)
+        }
+        pickerView.snp.makeConstraints {
+            $0.width.height.equalTo(declineButtonWidth)
+        }
+        chatButton.snp.makeConstraints {
+            $0.width.height.equalTo(declineButtonWidth)
         }
     }
 }
@@ -163,9 +243,10 @@ final class MeetingViewController: UIViewController {
 // MARK: - UICollectionViewDataSource
 
 extension MeetingViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(participants.count)
-        return participants.count
+        print(meetingViewModel.participants.count)
+        return meetingViewModel.participants.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -177,13 +258,8 @@ extension MeetingViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         cell.layer.cornerRadius = 6
-        cell.configure(with: participants[indexPath.row])
+        cell.configure(with: meetingViewModel.participants[indexPath.row])
         return cell
     }
-}
-
-// MARK: - BaseView
-
-extension MeetingViewController: BaseView {
     
 }

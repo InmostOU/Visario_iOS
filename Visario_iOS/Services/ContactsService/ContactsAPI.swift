@@ -17,6 +17,7 @@ enum ContactsAPI {
     case editContact(id: Int, firstName: String, lastName: String)
     case uploadUserPhoto(data: Data, description: String)
     case getUserPhotoUrl
+    case getContactsActivityStatus(userArn: String)
 }
 
 // MARK: - TargetType
@@ -32,7 +33,12 @@ extension ContactsAPI: TargetType {
     }
     
     var baseURL: URL {
-        return URL(string: Constants.baseURL)!
+        switch self {
+        case .getContactsActivityStatus:
+            return URL(string: Constants.usersActivityBaseURL)!
+        default:
+            return URL(string: Constants.baseURL)!
+        }
     }
     
     var path: String {
@@ -51,6 +57,8 @@ extension ContactsAPI: TargetType {
             return "/user/profile"
         case .editContact:
             return "/contact/edit"
+        case .getContactsActivityStatus:
+            return "/contacts/status"
         case .uploadUserPhoto:
             return "/user/uploadUserPhoto"
         case .getUserPhotoUrl:
@@ -62,14 +70,14 @@ extension ContactsAPI: TargetType {
         switch self {
         case .addContact, .deleteContact, .getAllContacts, .updateProfile, .editContact, .uploadUserPhoto:
             return .post
-        case .findContact, .getProfile, .getUserPhotoUrl:
+        case .findContact, .getContactsActivityStatus, .getProfile, .getUserPhotoUrl:
             return .get
         }
     }
     
     var sampleData: Data {
         switch self {
-        case .getAllContacts, .findContact, .getProfile, .uploadUserPhoto, .getUserPhotoUrl:
+        case .getAllContacts, .getContactsActivityStatus, .findContact, .getProfile, .uploadUserPhoto, .getUserPhotoUrl:
             return Data()
         case .deleteContact(id: let id):
             return "{\"id\" : \(id)}".data(using: .utf8) ?? Data()
@@ -88,6 +96,8 @@ extension ContactsAPI: TargetType {
             return .requestPlain
         case .deleteContact, .addContact, .updateProfile, .editContact:
             return .requestData(sampleData)
+        case .getContactsActivityStatus(let userArn):
+            return .requestParameters(parameters: ["userArn" : "\(userArn)"], encoding: URLEncoding.default)
         case .findContact(username: let username):
             return .requestParameters(parameters: ["username" : "\(username)"], encoding: URLEncoding.default)
         case .uploadUserPhoto(data: let data, description: let description):
@@ -102,7 +112,6 @@ extension ContactsAPI: TargetType {
     var headers: [String : String]? {
         switch self {
         case .uploadUserPhoto:
-            
             return [
                      "Authorization" : token ?? "",
                      "Content-Type" : "multipart/form-data; boundary=\(boundary)"

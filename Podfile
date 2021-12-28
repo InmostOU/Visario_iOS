@@ -11,5 +11,8 @@ target 'Visario_iOS' do
   pod 'ProgressHUD'
   pod 'MessageKit'
   pod 'SDWebImage'
+  pod "StompClientLib"
+  pod 'SkyFloatingLabelTextField', '~> 3.0'
+  pod "SoundWave"
   
 end

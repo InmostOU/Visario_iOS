@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import SDWebImage
 
-protocol AddContactCellDelegate: class {
+protocol AddContactCellDelegate: AnyObject {
     func add(contact: ContactModel)
 }
 
@@ -57,12 +58,13 @@ final class AddContactTableViewCell: ContactTableViewCell {
     override func fill(with contact: ContactModel) {
         self.contact = contact
         titleLabel.text = contact.username
+        iconImageView.sd_setImage(with: URL(string: contact.image), placeholderImage: UIImage(systemName: "person.crop.circle"))
 
         switch contact.muted {
         case true:
-            subtitleLabel.text = OnlineState.offline.rawValue
+            subtitleLabel.text = "offline"
         case false:
-            subtitleLabel.text = OnlineState.online.rawValue
+            subtitleLabel.text = "online"
         }
     }
     

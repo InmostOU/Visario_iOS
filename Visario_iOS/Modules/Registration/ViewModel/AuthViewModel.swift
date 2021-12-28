@@ -32,25 +32,32 @@ final class AuthViewModel {
         }
     }
     
-    func loginUser(email: String, password: String) {
-        guard KeyChainStorage.shared.getProfile() == nil else {
-            UIApplication.shared.window?.rootViewController = ChimeTabBarController()
-            return
-        }
-        authenticationService.loginUser(email: email, password: password) { [weak self] result in
+    func loginUser(email: String, password: String, callback: @escaping () -> Void) {
+        authenticationService.loginUser(email: email, password: password) { [weak view] result in
+            callback()
             switch result {
-            case .success(_):
+            case .success:
                 UIApplication.shared.window?.rootViewController = ChimeTabBarController()
             case .failure(let error):
-                self?.view?.showAlert(title: "Error", message: "Something went wrong :(, \("\n") \(error)")
+                view?.showAlert(title: "Error", message: "Something went wrong :(,\n\(error)")
             }
         }
+    }
+    
+    func forgotPassword(email: String, callback: @escaping (Result<Void, Error>) -> Void) {
+        authenticationService.forgotPassword(email: email, callback: callback)
     }
     
     func goToRegister() {
         let navigationItem = UIBarButtonItem(title: "Login")
         view?.navigationItem.backBarButtonItem = navigationItem
         self.view?.navigationController?.pushViewController(RegistrationViewController(), animated: true)
+    }
+    
+    func goToForgotPassword() {
+        let navigationItem = UIBarButtonItem(title: "Forgot Password")
+        view?.navigationItem.backBarButtonItem = navigationItem
+        self.view?.navigationController?.pushViewController(ForgotPasswordViewController(), animated: true)
     }
     
     private func goToLoginScreen() {
