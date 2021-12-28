@@ -12,9 +12,11 @@ class AddContactsTableViewController: UITableViewController {
     // MARK: - Variables
     
     private let contactsViewModel: ContactsViewModel
+    private let delegate: ContactsListTableViewController?
     
-    init(model: ContactsViewModel) {
+    init(model: ContactsViewModel, delegate: ContactsListTableViewController?) {
         contactsViewModel = model
+        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -65,6 +67,21 @@ class AddContactsTableViewController: UITableViewController {
             tableView.backgroundView = nil
         }
     }
+    
+    private func getContactsActivityStatus() {
+        guard let userProfile = KeyChainStorage.shared.getProfile() else { return }
+        contactsViewModel.getSearchedContactsActivityStatus(by: userProfile.userArn) { [weak self] response in
+            guard let self = self else { return }
+            switch response {
+            case .success(_):
+                self.view.hideHUD()
+                self.tableView.reloadData()
+            case .failure(let error):
+                self.view.showFailedHUD()
+                print(error)
+            }
+        }
+    }
 }
 
 // MARK: - UITableViewDelegate
@@ -110,18 +127,25 @@ extension AddContactsTableViewController {
 extension AddContactsTableViewController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text, !text.isEmpty else { return }
+        guard let query = searchController.searchBar.text, !query.isEmpty else {
+            contactsViewModel.removeAllSearchedContacts()
+            tableView.reloadData()
+            setBackgroundView()
+            return
+        }
         view.showRotationHUD()
-        contactsViewModel.searchContacts(by: searchController.searchBar.text ?? "") { response in
-            self.view.hideHUD()
-            
+        
+        contactsViewModel.searchContacts(by: query) { [weak self] response in
+            guard let self = self else { return }
+            self.setBackgroundView()
             switch response {
             case .success(_):
+                self.view.hideHUD()
                 self.tableView.reloadData()
-                self.setBackgroundView()
+                self.getContactsActivityStatus()
             case .failure(let error):
+                self.view.showFailedHUD()
                 print(error)
-                self.setBackgroundView()
             }
         }
     }
@@ -137,6 +161,7 @@ extension AddContactsTableViewController: AddContactCellDelegate {
             case .success(_):
                 self.tableView.reloadData()
                 self.view.showSuccessHUD()
+                self.delegate?.getAllContacts()
             case .failure(let error):
                 self.view.showFailedHUD()
                 print(error)
@@ -154,6 +179,7 @@ extension AddContactsTableViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         contactsViewModel.removeAllSearchedContacts()
         tableView.reloadData()
+        view.hideHUD()
         setBackgroundView()
     }
 }
@@ -161,12 +187,6 @@ extension AddContactsTableViewController: UISearchBarDelegate {
 // MARK: - UITextFieldDelegate
 
 extension AddContactsTableViewController: UITextFieldDelegate {
-    
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        contactsViewModel.removeAllSearchedContacts()
-        tableView.reloadData()
-        setBackgroundView()
-    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20G165" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Channel" representedClassName=".Channel" syncable="YES">
+        <attribute name="channelArn" attributeType="String"/>
+        <attribute name="channelDescription" optional="YES" attributeType="String"/>
+        <attribute name="channelMode" attributeType="String"/>
+        <attribute name="isAdmin" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isMember" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isModerator" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="metadata" optional="YES" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="privacy" attributeType="String"/>
+        <relationship name="messages" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="channel" inverseEntity="Message"/>
+    </entity>
+    <entity name="Message" representedClassName=".Message" syncable="YES">
+        <attribute name="audioDuration" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="channelArn" attributeType="String"/>
+        <attribute name="content" attributeType="String"/>
+        <attribute name="createdTimestamp" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="delivered" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="file" optional="YES" attributeType="Binary"/>
+        <attribute name="fileName" optional="YES" attributeType="String"/>
+        <attribute name="fileURL" optional="YES" attributeType="String"/>
+        <attribute name="fromCurrentUser" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="lastEditedTimestamp" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="messageID" attributeType="String"/>
+        <attribute name="metadata" attributeType="String"/>
+        <attribute name="redacted" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="senderArn" attributeType="String"/>
+        <attribute name="senderName" attributeType="String"/>
+        <attribute name="type" attributeType="String"/>
+        <relationship name="channel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Channel" inverseName="messages" inverseEntity="Channel"/>
+    </entity>
+    <elements>
+        <element name="Channel" positionX="-54" positionY="81" width="128" height="179"/>
+        <element name="Message" positionX="-63" positionY="-18" width="128" height="314"/>
+    </elements>
+</model>

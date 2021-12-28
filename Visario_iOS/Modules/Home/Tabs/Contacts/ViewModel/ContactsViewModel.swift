@@ -72,6 +72,46 @@ final class ContactsViewModel {
             }
         }
     }
+    
+    func getContactsActivityStatus(by userArn: String, callback: @escaping (Result<Void, Error>) -> Void) {
+        contactsService.getContactsActivityStatus(by: userArn) { [weak self] response in
+            guard let self = self else { return }
+            switch response {
+            case .success(let contacts):
+                for contact in contacts {
+                    guard let contactIndex = self.allContacts.firstIndex(where: { $0.userArn == contact.userArn }) else { return }
+                    self.allContacts[contactIndex].online = contact.status == "online" ? true : false
+                }
+                callback(.success(()))
+            case .failure(let error):
+                print(error)
+                callback(.failure(error))
+            }
+        }
+    }
+    
+    func getSearchedContactsActivityStatus(by userArn: String, callback: @escaping (Result<Void, Error>) -> Void) {
+        contactsService.getContactsActivityStatus(by: userArn) { [weak self] response in
+            guard let self = self else { return }
+            switch response {
+            case .success(let contacts):
+                for contact in contacts {
+                    if let contactIndex = self.searchedContacts.firstIndex(where: { $0.userArn == contact.userArn }) {
+                        self.searchedContacts[contactIndex].online = contact.status == "online" ? true : false
+                    }
+                }
+                callback(.success(()))
+            case .failure(let error):
+                print(error)
+                callback(.failure(error))
+            }
+        }
+    }
+    
+    func setActivityStatus(of contact: ContactModel) {
+        guard let contactIndex = allContacts.firstIndex(where: { $0.userArn == contact.userArn }) else { return }
+        allContacts[contactIndex].online = contact.online
+    }
 
     func removeAllSearchedContacts() {
         searchedContacts.removeAll()

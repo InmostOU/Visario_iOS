@@ -6,6 +6,7 @@
 //
 
 import Moya
+import MessageKit
 
 final class ChannelsAPIService {
     
@@ -67,15 +68,60 @@ final class ChannelsAPIService {
         }
     }
     
-    func addMemberToChannel(channelArn: String, memberArn: String, callback: @escaping VoidCallback) {
+    func addMemberToChannel(channelArn: String, memberArn: String, callback: @escaping (Result<Void, NetworkError>) -> Void) {
         channelsProvider.request(.addMemberToChannel(channelArn: channelArn, memberArn: memberArn)) { response in
+            switch response {
+            case .success(let response):
+                guard response.statusCode == 200 else {
+                    do {
+                        let errorModel = try JSONDecoder().decode(ErrorResponse.self, from: response.data)
+                        callback(.failure(.errorResponse(errorModel)))
+                    } catch {
+                        callback(.failure(.errorMessage(error.localizedDescription)))
+                    }
+                    return
+                }
+                callback(.success(()))
+            case .failure(let error):
+                callback(.failure(.errorMessage(error.localizedDescription)))
+            }
+        }
+    }
+    
+    func getChannelMembers(channelArn: String, callback: @escaping (Result<[ChannelMember], Error>) -> Void) {
+        channelsProvider.request(.getChannelMembers(channelArn: channelArn)) { response in
             switch response {
             case .success(let response):
                 guard response.statusCode == 200 else {
                     callback(.failure(NetworkError.statusCode))
                     return
                 }
-                callback(.success(()))
+                do {
+                    let channelsWrapper = try JSONDecoder().decode(ChannelMembersDataWrapper.self, from: response.data)
+                    callback(.success(channelsWrapper.data))
+                } catch {
+                    callback(.failure(error))
+                }
+            case .failure(let error):
+                callback(.failure(error))
+            }
+        }
+    }
+    
+    func getChannelMembersActivityStatus(channelArn: String, callback: @escaping (Result<[ContactActivityModel], Error>) -> Void) {
+        channelsProvider.request(.getChannelMembersActivityStatus(channelArn: channelArn)) { response in
+            switch response {
+            case .success(let response):
+                guard response.statusCode == 200 else {
+                    callback(.failure(NetworkError.statusCode))
+                    return
+                }
+                do {
+                    let channelsWrapper = try JSONDecoder().decode(ContactsActivityStatusDataWrapper.self, from: response.data)
+                    callback(.success(channelsWrapper.data))
+                } catch {
+                    callback(.failure(error))
+                }
             case .failure(let error):
                 callback(.failure(error))
             }
@@ -122,8 +168,25 @@ final class ChannelsAPIService {
         }
     }
     
-    func sendMessage(message: ServerMessage, callback: @escaping VoidCallback) {
-        channelsProvider.request(.sendMessage(message: message)) { response in
+    func sendMessage(message: KitMessage, callback: @escaping VoidCallback) {
+        switch message.kind {
+        case .photo(let imageItem):
+            if let url = imageItem.url, url.absoluteString.contains(Constants.baseURL) {
+                sendTextMessage(message: message, callback: callback)
+            } else {
+                sendAttachmentMessage(message: message, callback: callback)
+            }
+        case .audio(_):
+            sendAttachmentMessage(message: message, callback: callback)
+        case .linkPreview(_):
+            sendAttachmentMessage(message: message, callback: callback)
+        default:
+            sendTextMessage(message: message, callback: callback)
+        }
+    }
+    
+    func editMessage(message: KitMessage, callback: @escaping VoidCallback) {
+        channelsProvider.request(.editMessage(message: message)) { response in
             switch response {
             case .success(let response):
                 guard response.statusCode == 200 else {
@@ -133,6 +196,26 @@ final class ChannelsAPIService {
                 callback(.success(()))
             case .failure(let error):
                 callback(.failure(error))
+            }
+        }
+    }
+    
+    func deleteMessage(messageID: String, callback: @escaping (Result<Void, NetworkError>) -> Void) {
+        channelsProvider.request(.deleteMessage(id: messageID)) { response in
+            switch response {
+            case .success(let response):
+                guard response.statusCode == 200 else {
+                    do {
+                        let errorModel = try JSONDecoder().decode(ErrorResponse.self, from: response.data)
+                        callback(.failure(.errorResponse(errorModel)))
+                    } catch {
+                        callback(.failure(.errorMessage(error.localizedDescription)))
+                    }
+                    return
+                }
+                callback(.success(()))
+            case .failure(let error):
+                callback(.failure(.errorMessage(error.localizedDescription)))
             }
         }
     }
@@ -156,4 +239,35 @@ final class ChannelsAPIService {
             }
         }
     }
+    
+    private func sendTextMessage(message: KitMessage, callback: @escaping VoidCallback) {
+        channelsProvider.request(.sendTextMessage(message: message)) { response in
+            switch response {
+            case .success(let response):
+                guard response.statusCode == 200 else {
+                    callback(.failure(NetworkError.statusCode))
+                    return
+                }
+                callback(.success(()))
+            case .failure(let error):
+                callback(.failure(error))
+            }
+        }
+    }
+    
+    private func sendAttachmentMessage(message: KitMessage, callback: @escaping VoidCallback) {
+        channelsProvider.request(.sendAttachmentMessage(message: message)) { response in
+            switch response {
+            case .success(let response):
+                guard response.statusCode == 200 else {
+                    callback(.failure(NetworkError.statusCode))
+                    return
+                }
+                callback(.success(()))
+            case .failure(let error):
+                callback(.failure(error))
+            }
+        }
+    }
 }
+

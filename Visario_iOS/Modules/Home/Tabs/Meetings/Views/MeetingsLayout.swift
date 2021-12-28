@@ -49,7 +49,7 @@ final class MeetingsLayout: UICollectionViewFlowLayout {
         while (itemsCount - itemIndex) > 0 {
             let columnWidth: CGFloat
             
-            if !isEvenNumber && row == 0 {
+            if !isEvenNumber && row == 0 || itemsCount == 2 {
                 columnWidth = contentWidth / CGFloat(numberOfColumns)
             } else {
                 columnWidth = contentWidth / CGFloat(numberOfColumns) - columnSpacing / 2

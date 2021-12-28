@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs FaceID access for biometric authentication</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -49,6 +51,16 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Visario requires microphone access to enable voice meetings</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Visario requires camera access to enable video meetings</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Visario want take access for your photo library</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We want to save the photo</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>App want to access your location</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

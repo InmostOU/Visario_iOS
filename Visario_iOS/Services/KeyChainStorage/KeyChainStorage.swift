@@ -47,7 +47,8 @@ final class KeyChainStorage {
             image: userInfo["image"] as? String ?? "",
             about: userInfo["about"] as? String ?? "",
             showEmailTo: userInfo["showEmailTo"] as? Privacy ?? .contacts,
-            showPhoneNumberTo: userInfo["showPhoneNumberTo"] as? Privacy ?? .contacts
+            showPhoneNumberTo: userInfo["showPhoneNumberTo"] as? Privacy ?? .contacts,
+            password: userInfo["password"] as? String ?? ""
         )
         return profile
     }
@@ -72,12 +73,17 @@ final class KeyChainStorage {
         userInfo["about"] = profile.about
         userInfo["showEmailTo"] = profile.showEmailTo.rawValue
         userInfo["showPhoneNumberTo"] = profile.showPhoneNumberTo.rawValue
+        userInfo["password"] = profile.password
         
         userDefaults.setValue(userInfo, forKey: Key.userProfile)
     }
-   
+    
     // delete
     func deleteAccessToken() {
         userDefaults.removeObject(forKey: Key.token)
+    }
+    
+    func deleteUserProfile() {
+        userDefaults.removeObject(forKey: Key.userProfile)
     }
 }

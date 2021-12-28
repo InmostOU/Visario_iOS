@@ -12,6 +12,7 @@ class ContactsListTableViewController: UITableViewController {
     // MARK: - Variables
     
     private let contactsViewModel = ContactsViewModel()
+    private let usersActivityService = StompClient.shared
     
     // MARK: - Lifecycle
     
@@ -19,19 +20,13 @@ class ContactsListTableViewController: UITableViewController {
         super.viewDidLoad()
         
         contactsViewModel.view = self
+        usersActivityService.delegate = self
         
         setupNavigationBar()
         setupTableView()
+        getAllContacts()
         
         view.showRotationHUD()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        getAllContacts()
-        tableView.reloadData()
-        setBackgroundView()
     }
     
     private func setBackgroundView() {
@@ -44,23 +39,38 @@ class ContactsListTableViewController: UITableViewController {
         }
     }
     
-    private func getAllContacts() {
-        contactsViewModel.getAllContacts { response in
+    func getAllContacts() {
+        contactsViewModel.getAllContacts { [weak self] response in
+            guard let self = self else { return }
+            self.setBackgroundView()
+            switch response {
+            case .success(_):
+                self.getContactsActivityStatus()
+            case .failure(let error):
+                self.view.showFailedHUD()
+                print(error)
+            }
+        }
+    }
+    
+    private func getContactsActivityStatus() {
+        guard let userProfile = KeyChainStorage.shared.getProfile() else { return }
+        contactsViewModel.getContactsActivityStatus(by: userProfile.userArn) { [weak self] response in
+            guard let self = self else { return }
+            self.setBackgroundView()
             switch response {
             case .success(_):
                 self.view.hideHUD()
                 self.tableView.reloadData()
-                self.setBackgroundView()
             case .failure(let error):
+                self.view.showFailedHUD()
                 print(error)
-                self.setBackgroundView()
             }
         }
     }
     
     private func setupNavigationBar() {
         navigationItem.title = TabItem.contacts.title
-        
         let addBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addUserButtonTapped))
         navigationItem.rightBarButtonItem = addBarButton
     }
@@ -72,13 +82,14 @@ class ContactsListTableViewController: UITableViewController {
     }
     
     @objc private func addUserButtonTapped(_ sender: UIBarButtonItem) {
-        let addContactsViewController = AddContactsTableViewController(model: contactsViewModel)
+        let addContactsViewController = AddContactsTableViewController(model: contactsViewModel, delegate: self)
         contactsViewModel.removeAllSearchedContacts()
         navigationController?.pushViewController(addContactsViewController, animated: true)
     }
     
     private func deleteContact(by indexPath: IndexPath) {
-        contactsViewModel.deleteContact(at: indexPath.row) { response in
+        contactsViewModel.deleteContact(at: indexPath.row) { [weak self] response in
+            guard let self = self else { return }
             switch response {
             case .success(_):
                 self.view.showSuccessHUD()
@@ -126,7 +137,7 @@ extension ContactsListTableViewController {
         let deleteAction = UIContextualAction(style: .destructive, title: "") { [unowned self] (_, _, _) in
             self.deleteContact(by: indexPath)
         }
-        deleteAction.image = UIImage(systemName: "trash")
+        deleteAction.image = UIImage(systemName: "person.fill.badge.minus")
         let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
         return swipeActions
     }
@@ -136,8 +147,13 @@ extension ContactsListTableViewController {
     }
 }
 
-// MARK: - BaseView
+// MARK: - StompClientDelegate
 
-extension ContactsListTableViewController: BaseView {
+extension ContactsListTableViewController: StompClientDelegate {
+    
+    func userActivity(user: ContactModel) {
+        contactsViewModel.setActivityStatus(of: user)
+        tableView.reloadData()
+    }
     
 }
