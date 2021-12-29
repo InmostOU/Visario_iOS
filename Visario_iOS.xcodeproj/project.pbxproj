@@ -91,6 +91,7 @@
 		FE653BE926EF59CB00088FDF /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE653BE826EF59CB00088FDF /* ErrorResponse.swift */; };
 		FE653BEB26EFB8D000088FDF /* SearchedChannelChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE653BEA26EFB8D000088FDF /* SearchedChannelChatViewController.swift */; };
 		FE69972726C26E2E00B6589D /* UITableViewCell+identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69972626C26E2E00B6589D /* UITableViewCell+identifier.swift */; };
+		FE72424C277C8ADD00EAEF24 /* SocialNetworkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE72424B277C8ADD00EAEF24 /* SocialNetworkButton.swift */; };
 		FE8162B427045CBD004A2BD7 /* FilesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8162B327045CBD004A2BD7 /* FilesService.swift */; };
 		FE864A5A26F0D77B00F875FA /* ChannelsConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE864A5926F0D77B00F875FA /* ChannelsConverter.swift */; };
 		FE8F4489270A5B4800E6A460 /* URL+fileSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8F4488270A5B4800E6A460 /* URL+fileSize.swift */; };
@@ -127,6 +128,8 @@
 		FEDE01C62714BF7400BAB804 /* UserActivityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDE01C52714BF7400BAB804 /* UserActivityModel.swift */; };
 		FEE111E027429F3F00E8793B /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE111DF27429F3F00E8793B /* ForgotPasswordViewController.swift */; };
 		FEE1BDE426BC4543002C707C /* KeyChainStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE1BDE326BC4543002C707C /* KeyChainStorage.swift */; };
+		FEE7B751277C560200D9C104 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = FEE7B750277C560200D9C104 /* FacebookCore */; };
+		FEE7B753277C560200D9C104 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = FEE7B752277C560200D9C104 /* FacebookLogin */; };
 		FEF23D9C273BC14F00762A06 /* SkyFloatingPasswordTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF23D9B273BC14F00762A06 /* SkyFloatingPasswordTextField.swift */; };
 		FEFFE93D26C9A9260025E6FE /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFFE93C26C9A9260025E6FE /* Sender.swift */; };
 		FEFFE94026C9A9550025E6FE /* KitMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFFE93F26C9A9550025E6FE /* KitMessage.swift */; };
@@ -272,6 +275,7 @@
 		FE653BE826EF59CB00088FDF /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		FE653BEA26EFB8D000088FDF /* SearchedChannelChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedChannelChatViewController.swift; sourceTree = "<group>"; };
 		FE69972626C26E2E00B6589D /* UITableViewCell+identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+identifier.swift"; sourceTree = "<group>"; };
+		FE72424B277C8ADD00EAEF24 /* SocialNetworkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialNetworkButton.swift; sourceTree = "<group>"; };
 		FE73955526CD7E0E009602F4 /* String+validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+validation.swift"; sourceTree = "<group>"; };
 		FE8162B327045CBD004A2BD7 /* FilesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesService.swift; sourceTree = "<group>"; };
 		FE864A5926F0D77B00F875FA /* ChannelsConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsConverter.swift; sourceTree = "<group>"; };
@@ -332,9 +336,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEE7B753277C560200D9C104 /* FacebookLogin in Frameworks */,
 				86E29F4E26DA4AAB004ADB4D /* AmazonChimeSDKMedia.xcframework in Frameworks */,
 				613A8A7CAD47664778EC3477 /* Pods_Visario_iOS.framework in Frameworks */,
 				86E29F4C26DA4AAB004ADB4D /* AmazonChimeSDK.xcframework in Frameworks */,
+				FEE7B751277C560200D9C104 /* FacebookCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +412,7 @@
 			children = (
 				8612A18B26BBD2CA00AB0F4E /* LoginViewController.swift */,
 				FEE111DF27429F3F00E8793B /* ForgotPasswordViewController.swift */,
+				FE72424B277C8ADD00EAEF24 /* SocialNetworkButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -525,14 +532,14 @@
 		FE031A6926B979EB004F8167 /* Visario_iOS */ = {
 			isa = PBXGroup;
 			children = (
-				86F48EF42704A5070089F039 /* Visario_iOS.entitlements */,
-				FE31CB3B26B9A9E1009AFA27 /* Modules */,
-				FE35AD9126B9C11B006EDFEC /* Services */,
-				FE31CB3A26B9A9D9009AFA27 /* Extensions */,
-				8612A19326BBD64500AB0F4E /* Protocols */,
 				869B889C26BD2D3E00DB80FC /* Constants */,
+				FE31CB3A26B9A9D9009AFA27 /* Extensions */,
+				FE31CB3B26B9A9E1009AFA27 /* Modules */,
+				8612A19326BBD64500AB0F4E /* Protocols */,
 				FE6015C026BAC9C10015665F /* Resources */,
+				FE35AD9126B9C11B006EDFEC /* Services */,
 				FE31CB3926B9A9D2009AFA27 /* Supporting files */,
+				86F48EF42704A5070089F039 /* Visario_iOS.entitlements */,
 			);
 			path = Visario_iOS;
 			sourceTree = "<group>";
@@ -991,6 +998,10 @@
 				86F48EEB27049DDD0089F039 /* PBXTargetDependency */,
 			);
 			name = Visario_iOS;
+			packageProductDependencies = (
+				FEE7B750277C560200D9C104 /* FacebookCore */,
+				FEE7B752277C560200D9C104 /* FacebookLogin */,
+			);
 			productName = Visario_iOS;
 			productReference = FE031A6726B979EB004F8167 /* Visario_iOS.app */;
 			productType = "com.apple.product-type.application";
@@ -1021,6 +1032,9 @@
 				Base,
 			);
 			mainGroup = FE031A5E26B979EB004F8167;
+			packageReferences = (
+				FEE7B74F277C560200D9C104 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+			);
 			productRefGroup = FE031A6826B979EB004F8167 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1195,6 +1209,7 @@
 				8691E39526C58FFD00397071 /* EditProfileViewModel.swift in Sources */,
 				FE69972726C26E2E00B6589D /* UITableViewCell+identifier.swift in Sources */,
 				FE9543FF26D7D75000C28F0B /* SearchedChannelsTableViewController.swift in Sources */,
+				FE72424C277C8ADD00EAEF24 /* SocialNetworkButton.swift in Sources */,
 				86CA16B326C5652600E411BF /* TextFieldTableViewCell.swift in Sources */,
 				FEAE035226DCD8640008B1EE /* WebSocketManager.swift in Sources */,
 				FE5C74FC26DF5BA30024594A /* ChannelMemberTableViewCell.swift in Sources */,
@@ -1579,6 +1594,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FEE7B74F277C560200D9C104 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FEE7B750277C560200D9C104 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FEE7B74F277C560200D9C104 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		FEE7B752277C560200D9C104 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FEE7B74F277C560200D9C104 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		FE3FE25726E5F48900F1F5DD /* Visario.xcdatamodeld */ = {

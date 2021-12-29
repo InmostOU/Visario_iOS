@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import LocalAuthentication
+import FBSDKLoginKit
 
 final class LoginViewController: UIViewController {
     
@@ -130,6 +131,23 @@ final class LoginViewController: UIViewController {
         return spinner
     }()
     
+    private lazy var socialNetworkButtonsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        return stackView
+    }()
+    
+    private lazy var facebookButton: SocialNetworkButton = {
+        let fbButton = SocialNetworkButton()
+        fbButton.layer.cornerRadius = 3
+        fbButton.layer.masksToBounds = true
+        fbButton.setImage(UIImage(named: "facebook"), for: .normal)
+        fbButton.setTitle("", for: .normal)
+        fbButton.addTarget(self, action: #selector(fbLoginButtonClicked), for: .touchUpInside)
+        return fbButton
+    }()
+    
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -228,19 +246,32 @@ final class LoginViewController: UIViewController {
         sender.setImage(eyeIcon, for: .normal)
     }
     
+    @objc private func fbLoginButtonClicked() {
+        LoginManager().logIn(permissions: ["public_profile"], from: self) { result, error in
+            if let error = error {
+                print("Encountered Erorr: \(error)")
+            } else if let result = result, result.isCancelled {
+                print("Cancelled")
+            } else {
+                print("\n token:", result?.token?.tokenString ?? "", "\n")
+                print("Logged In")
+            }
+        }
+    }
+    
     // MARK: - Private
     
     private func checkLoginButtonEnabling() {
         guard !(mailTextField.text?.isEmpty ?? false),
-              !(passwordTextField.text?.isEmpty ?? false) else {
-            
-            self.loginButton.isEnabled = false
-            self.loginButton.backgroundColor = .gray
+              !(passwordTextField.text?.isEmpty ?? false)
+        else {
+            loginButton.isEnabled = false
+            loginButton.backgroundColor = .gray
             return
         }
         
-        self.loginButton.isEnabled = true
-        self.loginButton.backgroundColor = .purple
+        loginButton.isEnabled = true
+        loginButton.backgroundColor = .purple
     }
     
     private func configureView() {
@@ -248,7 +279,7 @@ final class LoginViewController: UIViewController {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
-       
+        
         loginStackView.addArrangedSubview(mailTextField)
         loginStackView.addArrangedSubview(passwordTextField)
         
@@ -258,6 +289,9 @@ final class LoginViewController: UIViewController {
         view.addSubview(biometricButton)
         view.addSubview(registerButton)
         view.addSubview(forgotPasswordButton)
+        
+        socialNetworkButtonsStackView.addArrangedSubview(facebookButton)
+        view.addSubviews(socialNetworkButtonsStackView)
     }
     
     private func configureLayout() {
@@ -304,6 +338,11 @@ final class LoginViewController: UIViewController {
         forgotPasswordButton.snp.makeConstraints {
             $0.leading.equalTo(passwordTextField)
             $0.centerY.equalTo(registerButton)
+        }
+        
+        socialNetworkButtonsStackView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalTo(view.layoutMarginsGuide)
         }
     }
 }
