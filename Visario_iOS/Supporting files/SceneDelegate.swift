@@ -33,7 +33,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let url = URLContexts.first?.url else {
             return
         }
-
         ApplicationDelegate.shared.application(
             UIApplication.shared,
             open: url,

@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import LocalAuthentication
 import FBSDKLoginKit
+import GoogleSignIn
 
 final class LoginViewController: UIViewController {
     
@@ -144,7 +145,17 @@ final class LoginViewController: UIViewController {
         fbButton.layer.masksToBounds = true
         fbButton.setImage(UIImage(named: "facebook"), for: .normal)
         fbButton.setTitle("", for: .normal)
-        fbButton.addTarget(self, action: #selector(fbLoginButtonClicked), for: .touchUpInside)
+        fbButton.addTarget(self, action: #selector(fbLoginButtonTapped), for: .touchUpInside)
+        return fbButton
+    }()
+    
+    private lazy var googleButton: SocialNetworkButton = {
+        let fbButton = SocialNetworkButton()
+        fbButton.layer.cornerRadius = 3
+        fbButton.layer.masksToBounds = true
+        fbButton.setImage(UIImage(named: "google"), for: .normal)
+        fbButton.setTitle("", for: .normal)
+        fbButton.addTarget(self, action: #selector(googleLoginButtonTapped), for: .touchUpInside)
         return fbButton
     }()
     
@@ -246,7 +257,7 @@ final class LoginViewController: UIViewController {
         sender.setImage(eyeIcon, for: .normal)
     }
     
-    @objc private func fbLoginButtonClicked() {
+    @objc private func fbLoginButtonTapped() {
         LoginManager().logIn(permissions: ["public_profile"], from: self) { [weak self] result, error in
             guard let self = self else { return }
             if let error = error {
@@ -261,6 +272,14 @@ final class LoginViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @objc private func googleLoginButtonTapped() {
+        let signInConfig = GIDConfiguration(clientID: "796447152500-k5tclb6etfl2obsa01nrm8es21h4suo1.apps.googleusercontent.com")
+        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
+            guard error == nil else { return }
+            print("userID:", user?.userID ?? "No ID")
+          }
     }
     
     // MARK: - Private
@@ -294,7 +313,7 @@ final class LoginViewController: UIViewController {
         view.addSubview(registerButton)
         view.addSubview(forgotPasswordButton)
         
-        socialNetworkButtonsStackView.addArrangedSubview(facebookButton)
+        socialNetworkButtonsStackView.addArrangedSubviews(googleButton, facebookButton)
         view.addSubviews(socialNetworkButtonsStackView)
     }
     

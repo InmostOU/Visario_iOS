@@ -1,5 +1,18 @@
 PODS:
   - Alamofire (5.4.4)
+  - AppAuth (1.4.0):
+    - AppAuth/Core (= 1.4.0)
+    - AppAuth/ExternalUserAgent (= 1.4.0)
+  - AppAuth/Core (1.4.0)
+  - AppAuth/ExternalUserAgent (1.4.0)
+  - GoogleSignIn (6.0.2):
+    - AppAuth (~> 1.4)
+    - GTMAppAuth (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GTMAppAuth (1.2.2):
+    - AppAuth/Core (~> 1.4)
+    - GTMSessionFetcher/Core (~> 1.5)
+  - GTMSessionFetcher/Core (1.7.0)
   - InputBarAccessoryView (5.4.0):
     - InputBarAccessoryView/Core (= 5.4.0)
   - InputBarAccessoryView/Core (5.4.0)
@@ -21,6 +34,7 @@ PODS:
     - SocketRocket
 
 DEPENDENCIES:
+  - GoogleSignIn
   - MessageKit
   - Moya (~> 14.0)
   - ProgressHUD
@@ -33,6 +47,10 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
+    - AppAuth
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
     - InputBarAccessoryView
     - MessageKit
     - Moya
@@ -46,6 +64,10 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
+  AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  GoogleSignIn: fd381840dbe7c1137aa6dc30849a5c3e070c034a
+  GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
+  GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   InputBarAccessoryView: 74d471ab1fa1736806be50328df79257e52865a9
   MessageKit: 8e76dd8d65ad44b49e1651c673497146416461e9
   Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
@@ -57,6 +79,6 @@ SPEC CHECKSUMS:
   SoundWave: d98ffaa863570b29d991da32a09b7ce1b4aaf2d4
   StompClientLib: ac40390e9660c574675f1c933bec81c8e2811a4f
 
-PODFILE CHECKSUM: 9c24ba63f05d2a198cca0c82fa6320b5fd5ac570
+PODFILE CHECKSUM: 45e3756136f2d5b7ad082f98bbd630d1281b8710
 
 COCOAPODS: 1.11.2

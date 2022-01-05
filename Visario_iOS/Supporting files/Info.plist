@@ -2,43 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>fbapi</string>
-      <string>fbapi20130214</string>
-      <string>fbapi20130410</string>
-      <string>fbapi20130702</string>
-      <string>fbapi20131010</string>
-      <string>fbapi20131219</string>
-      <string>fbapi20140410</string>
-      <string>fbapi20140116</string>
-      <string>fbapi20150313</string>
-      <string>fbapi20150629</string>
-      <string>fbapi20160328</string>
-      <string>fbauth</string>
-      <string>fb-messenger-share-api</string>
-      <string>fbauth2</string>
-      <string>fbshareextension</string>
-    </array>
-    
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb451449813291316</string>
-			</array>
-		</dict>
-	</array>
-	<key>FacebookAppID</key>
-	<string>451449813291316</string>
-	<key>FacebookClientToken</key>
-	<string>c2af62dbc9a86e5c96c302f793a1e941</string>
-	<key>FacebookDisplayName</key>
-	<string>TEST_Facebook_Authorization</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>$(PRODUCT_NAME) needs FaceID access for biometric authentication</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -53,10 +16,63 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb451449813291316</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.796447152500-k5tclb6etfl2obsa01nrm8es21h4suo1</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>451449813291316</string>
+	<key>FacebookClientToken</key>
+	<string>c2af62dbc9a86e5c96c302f793a1e941</string>
+	<key>FacebookDisplayName</key>
+	<string>TEST_Facebook_Authorization</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fbapi20130214</string>
+		<string>fbapi20130410</string>
+		<string>fbapi20130702</string>
+		<string>fbapi20131010</string>
+		<string>fbapi20131219</string>
+		<string>fbapi20140410</string>
+		<string>fbapi20140116</string>
+		<string>fbapi20150313</string>
+		<string>fbapi20150629</string>
+		<string>fbapi20160328</string>
+		<string>fbauth</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Visario requires camera access to enable video meetings</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs FaceID access for biometric authentication</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>App want to access your location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Visario requires microphone access to enable voice meetings</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We want to save the photo</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Visario want take access for your photo library</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -86,16 +102,6 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Visario requires microphone access to enable voice meetings</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Visario requires camera access to enable video meetings</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Visario want take access for your photo library</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>We want to save the photo</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>App want to access your location</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

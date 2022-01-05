@@ -14,5 +14,6 @@ target 'Visario_iOS' do
   pod "StompClientLib"
   pod 'SkyFloatingLabelTextField', '~> 3.0'
   pod "SoundWave"
+  pod 'GoogleSignIn'
   
 end
