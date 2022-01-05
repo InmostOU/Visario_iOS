@@ -18,6 +18,7 @@ enum Constants {
     static let usersActivityBaseURL = "http://18.193.6.59:9010/activity"
     
     static let loginPath = "/login"
+    static let loginWithFbPath = "/facebookLogin"
     static let registerPath = "/register"
     static let changePasswordPath = "/changePassword"
     static let forgotPasswordPath = "/forgot-password"

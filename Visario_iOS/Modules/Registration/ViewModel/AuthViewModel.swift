@@ -44,6 +44,18 @@ final class AuthViewModel {
         }
     }
     
+    func authenticationViaFacebook(with token: String, callback: @escaping () -> Void) {
+        authenticationService.loginViaFacebook(fbToken: token) { [weak view] result in
+            callback()
+            switch result {
+            case .success:
+                UIApplication.shared.window?.rootViewController = ChimeTabBarController()
+            case .failure(let error):
+                view?.showAlert(title: "Error", message: "Something went wrong :(,\n\(error)")
+            }
+        }
+    }
+    
     func forgotPassword(email: String, callback: @escaping (Result<Void, Error>) -> Void) {
         authenticationService.forgotPassword(email: email, callback: callback)
     }

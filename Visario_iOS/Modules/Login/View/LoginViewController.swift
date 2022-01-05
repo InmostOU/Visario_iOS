@@ -247,14 +247,18 @@ final class LoginViewController: UIViewController {
     }
     
     @objc private func fbLoginButtonClicked() {
-        LoginManager().logIn(permissions: ["public_profile"], from: self) { result, error in
+        LoginManager().logIn(permissions: ["public_profile"], from: self) { [weak self] result, error in
+            guard let self = self else { return }
             if let error = error {
                 print("Encountered Erorr: \(error)")
             } else if let result = result, result.isCancelled {
                 print("Cancelled")
             } else {
-                print("\n token:", result?.token?.tokenString ?? "", "\n")
-                print("Logged In")
+                guard let fbToken = result?.token?.tokenString else { return }
+                self.view.showRotationHUD()
+                self.authViewModel.authenticationViaFacebook(with: fbToken) {
+                    self.view.hideHUD()
+                }
             }
         }
     }

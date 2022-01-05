@@ -16,6 +16,7 @@ enum AuthAPI {
                   matchingPassword: String,
                   email: String)
     case login(email: String, password: String)
+    case loginWithFacebook(fbToken: String)
     case changePassword(oldPass: String, newPass: String, repeatPass: String)
     case forgotPassword(email: String)
 }
@@ -36,6 +37,8 @@ extension AuthAPI: TargetType {
         switch self {
         case .login:
             return Constants.loginPath
+        case .loginWithFacebook:
+            return Constants.loginWithFbPath
         case .register:
             return Constants.registerPath
         case .changePassword:
@@ -62,6 +65,8 @@ extension AuthAPI: TargetType {
             
         case .login(let email, let password):
             return "{\"email\" : \"\(email)\", \"password\" : \"\(password)\"}".data(using: .utf8) ?? Data()
+        case .loginWithFacebook(let fbToken):
+            return "{\"fbAccessToken\" : \"\(fbToken)\"}".data(using: .utf8) ?? Data()
         case .changePassword(let oldPass, let newPass, let repeatPass):
             return "{\"oldPassword\" : \"\(oldPass)\", \"newPassword\" : \"\(newPass)\", \"matchingPassword\" : \"\(repeatPass)\"}".data(using: .utf8) ?? Data()
         case .forgotPassword:
