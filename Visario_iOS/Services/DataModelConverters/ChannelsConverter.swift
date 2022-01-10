@@ -41,20 +41,19 @@ final class ChannelsConverter {
         for channel in coreDataChannels {
             var messages: [ServerMessage] = []
             for message in channel.messagesArray {
-                let newMessage = ServerMessage(content: message.content,
+                let newMessage = ServerMessage(content: message.content ?? "",
                                                createdTimestamp: Int(message.createdTimestamp),
                                                lastEditedTimestamp: Int(message.lastEditedTimestamp),
-                                               messageId: message.messageID,
-                                               metadata: message.metadata,
+                                               messageId: message.messageID ?? "",
+                                               metadata: message.metadata ?? "",
                                                redacted: message.redacted,
-                                               senderArn: message.senderArn,
-                                               senderName: message.senderName,
+                                               senderArn: message.senderArn ?? "",
+                                               senderName: message.senderName ?? "",
                                                type: message.type == "STANDARD" ? .standard: .system,
-                                               channelArn: message.channelArn,
+                                               channelArn: message.channelArn ?? "",
                                                fromCurrentUser: message.fromCurrentUser,
                                                delivered: message.delivered,
                                                imgData: message.image,
-                                               //file: message.file,
                                                fileURL: message.fileURL,
                                                fileName: message.fileName,
                                                audioDuration: message.audioDuration)

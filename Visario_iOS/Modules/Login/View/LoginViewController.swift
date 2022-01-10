@@ -179,7 +179,10 @@ final class LoginViewController: UIViewController {
     }
     
     private func checkAuthorization() {
-        if KeyChainStorage.shared.getProfile() != nil {
+        if let profile = KeyChainStorage.shared.getProfile(),
+           let password = profile.password,
+           !password.isEmpty
+        {
             biometricButton.isHidden = false
         }
     }

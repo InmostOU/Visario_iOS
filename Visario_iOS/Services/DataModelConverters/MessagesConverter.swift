@@ -20,16 +20,16 @@ final class MessagesConverter {
         var serverMessages: [ServerMessage] = []
         
         for coreDataMessage in coreDataMessages {
-            let newServerMessage = ServerMessage(content: coreDataMessage.content,
+            let newServerMessage = ServerMessage(content: coreDataMessage.content ?? "",
                                                  createdTimestamp: Int(coreDataMessage.createdTimestamp),
                                                  lastEditedTimestamp: Int(coreDataMessage.lastEditedTimestamp),
-                                                 messageId: coreDataMessage.messageID,
-                                                 metadata: coreDataMessage.metadata,
+                                                 messageId: coreDataMessage.messageID ?? "",
+                                                 metadata: coreDataMessage.metadata ?? "",
                                                  redacted: coreDataMessage.redacted,
-                                                 senderArn: coreDataMessage.senderArn,
-                                                 senderName: coreDataMessage.senderName,
+                                                 senderArn: coreDataMessage.senderArn ?? "",
+                                                 senderName: coreDataMessage.senderName ?? "",
                                                  type: coreDataMessage.type == "STANDARD" ? .standard : .system,
-                                                 channelArn: coreDataMessage.channelArn,
+                                                 channelArn: coreDataMessage.channelArn ?? "",
                                                  fromCurrentUser: coreDataMessage.fromCurrentUser,
                                                  delivered: coreDataMessage.delivered)
             
@@ -99,6 +99,51 @@ final class MessagesConverter {
     // [ServerMessage] -> [KitMessage]
     func kitMessages(from netMessages: [ServerMessage]) -> [KitMessage] {
         netMessages.map { kitMessage(from: $0) }
+    }
+    
+    // [BotMessage] - [KitMessage]
+    func kitMessages(from botMessages: [BotMessage]) -> [KitMessage] {
+        botMessages.map { kitMessage(from: $0) }
+    }
+    
+    // BotMessage -> KitMessage
+    func kitMessage(from botMessage: BotMessage) -> KitMessage {
+        let sender = Sender(senderId: botMessage.senderArn ?? "", displayName: botMessage.senderName ?? "")
+        
+        return KitMessage(sender: sender,
+                          messageId: botMessage.id ?? "",
+                          sentDate: Date(),
+                          content: botMessage.message ?? "",
+                          createdTimestamp: 0,
+                          lastEditedTimestamp: 0,
+                          metadata: "",
+                          redacted: false,
+                          senderArn: sender.senderId,
+                          senderName: sender.displayName,
+                          type: .standard,
+                          channelArn: "",
+                          fromCurrentUser: false,
+                          delivered: true)
+    }
+    
+    // ChatBotMessageModel -> KitMessage
+    func kitMessage(from chatBotMessageModel: ChatBotMessageModel) -> KitMessage {
+        let sender = Sender(senderId: "chatBot", displayName: "Robi")
+        
+        return KitMessage(sender: sender,
+                          messageId: chatBotMessageModel.id ?? "",
+                          sentDate: Date(),
+                          content: chatBotMessageModel.message,
+                          createdTimestamp: 0,
+                          lastEditedTimestamp: 0,
+                          metadata: "",
+                          redacted: false,
+                          senderArn: sender.senderId,
+                          senderName: sender.displayName,
+                          type: .standard,
+                          channelArn: "",
+                          fromCurrentUser: false,
+                          delivered: true)
     }
     
     // ServerMessage -> KitMessage

@@ -50,6 +50,9 @@ struct KitMessage: MessageType {
     var fileURL: String?
     var fileName: String?
     var audioDuration: Float?
+    // coordinates
+    var lat: String?
+    var lng: String?
     
     var kind: MessageKind {
         guard let placeholder = UIImage(named: "placeholder") else { return .text(content) }

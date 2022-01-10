@@ -36,6 +36,14 @@ final class ChatBotRoomViewController: MessagesViewController {
         setSender()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        DispatchQueue.main.async {
+            self.messagesCollectionView.scrollToLastItem(at: .top, animated: false)
+        }
+    }
+    
     private func setupNavigationController() {
         navigationItem.title = "Chat-Bot"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "map.fill"), style: .plain, target: self, action: #selector(mapBarButtonTapped))
@@ -73,12 +81,9 @@ final class ChatBotRoomViewController: MessagesViewController {
     private func sendMessage(with text: String) {
         channelsViewModel.sendMessageToBot(message: newMessage(text)) { response in
             switch response {
-            case .success(_):
+            case .success:
                 self.reloadTableAndScrollToBottom()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.botSendMessage()
-                }
-            case .failure(_):
+            case .failure:
                 self.view.showFailedHUD()
             }
         }
@@ -106,40 +111,6 @@ final class ChatBotRoomViewController: MessagesViewController {
                           file: nil,
                           imageURL: nil,
                           fileURL: nil)
-    }
-    
-    private func botSendMessage() {
-        let createdTimestamp = Int(Date().timeIntervalSince1970 * 1000)
-        let uniqueID = UUID().uuidString
-        let sender = Sender(senderId: "robi", displayName: "robi")
-        
-        let message = KitMessage(sender: sender,
-                                 messageId: uniqueID,
-                                 sentDate: Date(),
-                                 content: "Hello \(self.sender.displayName), my name Robi",
-                                 createdTimestamp: createdTimestamp,
-                                 lastEditedTimestamp: createdTimestamp,
-                                 metadata: uniqueID,
-                                 redacted: false,
-                                 senderArn: sender.senderId,
-                                 senderName: sender.displayName,
-                                 type: .standard,
-                                 channelArn: "",
-                                 fromCurrentUser: true,
-                                 delivered: false,
-                                 image: nil,
-                                 file: nil,
-                                 imageURL: nil,
-                                 fileURL: nil)
-        
-        channelsViewModel.sendMessageToBot(message: message) { response in
-            switch response {
-            case .success(_):
-                self.reloadTableAndScrollToBottom()
-            case .failure(_):
-                self.view.showFailedHUD()
-            }
-        }
     }
     
     // MARK: - Actions

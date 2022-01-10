@@ -71,6 +71,7 @@
 		FE3FE26126E604CC00F1F5DD /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3FE26026E604CC00F1F5DD /* CoreDataService.swift */; };
 		FE4661CD270F5CBC00899E44 /* StompClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4661CC270F5CBC00899E44 /* StompClient.swift */; };
 		FE50D6CF270B90BB009AEC04 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE50D6CE270B90BB009AEC04 /* WebViewController.swift */; };
+		FE54A2C2278721C900BE2571 /* ChatBotMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE54A2C1278721C900BE2571 /* ChatBotMessageModel.swift */; };
 		FE556D7E26C110E4004FF7FB /* Mockable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE556D7D26C110E4004FF7FB /* Mockable.swift */; };
 		FE556D8126C113E0004FF7FB /* ContactsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE556D8026C113E0004FF7FB /* ContactsViewModel.swift */; };
 		FE556D8726C11C0C004FF7FB /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE556D8626C11C0C004FF7FB /* ContactTableViewCell.swift */; };
@@ -85,8 +86,6 @@
 		FE5F3DD626C1085B00C7149A /* ContactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5F3DD526C1085B00C7149A /* ContactModel.swift */; };
 		FE6015D126BACC940015665F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6015D026BACC940015665F /* Assets.xcassets */; };
 		FE64C15E277B639D00126F34 /* Channel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE64C15A277B639C00126F34 /* Channel+CoreDataProperties.swift */; };
-		FE64C15F277B639D00126F34 /* Message+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE64C15B277B639C00126F34 /* Message+CoreDataProperties.swift */; };
-		FE64C160277B639D00126F34 /* Message+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE64C15C277B639C00126F34 /* Message+CoreDataClass.swift */; };
 		FE64C161277B639D00126F34 /* Channel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE64C15D277B639C00126F34 /* Channel+CoreDataClass.swift */; };
 		FE653BE926EF59CB00088FDF /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE653BE826EF59CB00088FDF /* ErrorResponse.swift */; };
 		FE653BEB26EFB8D000088FDF /* SearchedChannelChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE653BEA26EFB8D000088FDF /* SearchedChannelChatViewController.swift */; };
@@ -255,6 +254,7 @@
 		FE3FE26026E604CC00F1F5DD /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		FE4661CC270F5CBC00899E44 /* StompClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StompClient.swift; sourceTree = "<group>"; };
 		FE50D6CE270B90BB009AEC04 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		FE54A2C1278721C900BE2571 /* ChatBotMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotMessageModel.swift; sourceTree = "<group>"; };
 		FE556D7D26C110E4004FF7FB /* Mockable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mockable.swift; sourceTree = "<group>"; };
 		FE556D8026C113E0004FF7FB /* ContactsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModel.swift; sourceTree = "<group>"; };
 		FE556D8626C11C0C004FF7FB /* ContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
@@ -269,8 +269,6 @@
 		FE5F3DD526C1085B00C7149A /* ContactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactModel.swift; sourceTree = "<group>"; };
 		FE6015D026BACC940015665F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE64C15A277B639C00126F34 /* Channel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Channel+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		FE64C15B277B639C00126F34 /* Message+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		FE64C15C277B639C00126F34 /* Message+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataClass.swift"; sourceTree = "<group>"; };
 		FE64C15D277B639C00126F34 /* Channel+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Channel+CoreDataClass.swift"; sourceTree = "<group>"; };
 		FE653BE826EF59CB00088FDF /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		FE653BEA26EFB8D000088FDF /* SearchedChannelChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedChannelChatViewController.swift; sourceTree = "<group>"; };
@@ -725,6 +723,7 @@
 				FEFFE93C26C9A9260025E6FE /* Sender.swift */,
 				FEB614DA26C6529700FAFCF5 /* ServerMessage.swift */,
 				FEAE035526DCF3440008B1EE /* WebSocketResponse.swift */,
+				FE54A2C1278721C900BE2571 /* ChatBotMessageModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -744,8 +743,6 @@
 			children = (
 				FE64C15D277B639C00126F34 /* Channel+CoreDataClass.swift */,
 				FE64C15A277B639C00126F34 /* Channel+CoreDataProperties.swift */,
-				FE64C15C277B639C00126F34 /* Message+CoreDataClass.swift */,
-				FE64C15B277B639C00126F34 /* Message+CoreDataProperties.swift */,
 				FE3FE25726E5F48900F1F5DD /* Visario.xcdatamodeld */,
 			);
 			path = CoreDataModel;
@@ -1129,7 +1126,6 @@
 				FEFFE96726CADE680025E6FE /* ChannelSetNameTableViewCell.swift in Sources */,
 				FE9543E226D798F800C28F0B /* Date+format.swift in Sources */,
 				8612A19526BBD65300AB0F4E /* BaseView.swift in Sources */,
-				FE64C160277B639D00126F34 /* Message+CoreDataClass.swift in Sources */,
 				FE653BE926EF59CB00088FDF /* ErrorResponse.swift in Sources */,
 				8612A18C26BBD2CA00AB0F4E /* LoginViewController.swift in Sources */,
 				FE9543DF26D798F800C28F0B /* UITextField+textPaddings.swift in Sources */,
@@ -1162,10 +1158,10 @@
 				868D523626FD09010007BAEA /* ChannelSelectionViewModel.swift in Sources */,
 				FE14BC1527688404005329E2 /* MeetingChatViewController.swift in Sources */,
 				867CC8EE26F2090800378C31 /* UserInfoResponseModel.swift in Sources */,
-				FE64C15F277B639D00126F34 /* Message+CoreDataProperties.swift in Sources */,
 				FEC96FBE26BD821700EBEB70 /* ChannelsListTableViewController.swift in Sources */,
 				FE3FE26126E604CC00F1F5DD /* CoreDataService.swift in Sources */,
 				FE321A2726F0D6B70050D157 /* MessagesConverter.swift in Sources */,
+				FE54A2C2278721C900BE2571 /* ChatBotMessageModel.swift in Sources */,
 				FE50D6CF270B90BB009AEC04 /* WebViewController.swift in Sources */,
 				FEB614B226C50E3E00FAFCF5 /* ChannelsAPIService.swift in Sources */,
 				FE2387162720598D001001FA /* UTType+word.swift in Sources */,

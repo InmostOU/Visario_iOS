@@ -176,12 +176,29 @@ final class ChannelsAPIService {
             } else {
                 sendAttachmentMessage(message: message, callback: callback)
             }
-        case .audio(_):
+        case .audio:
             sendAttachmentMessage(message: message, callback: callback)
-        case .linkPreview(_):
+        case .linkPreview:
             sendAttachmentMessage(message: message, callback: callback)
         default:
             sendTextMessage(message: message, callback: callback)
+        }
+    }
+    
+    func sendChatBotMessage(message: ChatBotMessageModel, callback: @escaping (Result<ChatBotMessageModel, Error>) -> Void) {
+        channelsProvider.request(.sendChatBotMessage(message: message)) { response in
+            switch response {
+            case .success(let response):
+                guard response.statusCode == 200 else {
+                    callback(.failure(NetworkError.statusCode))
+                    return
+                }
+                let messageStringFromBot = String(decoding: response.data, as: UTF8.self)
+                let message = ChatBotMessageModel(message: messageStringFromBot, lat: "", lng: "")
+                callback(.success(message))
+            case .failure(let error):
+                callback(.failure(error))
+            }
         }
     }
     

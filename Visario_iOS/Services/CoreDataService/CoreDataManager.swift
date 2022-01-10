@@ -29,6 +29,18 @@ final class CoreDataManager {
         }
     }
     
+    func readBotMessages(callback: @escaping ([BotMessage]) -> Void) {
+        delegate.persistentContainer.performBackgroundTask { context in
+            do {
+                let request = NSFetchRequest<BotMessage>(entityName: "BotMessage")
+                let messages = try context.fetch(request)
+                callback(messages)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     // write channel
     func saveChannels(channels: [ChannelWithMessagesModel], callback: @escaping () -> Void) {
         delegate.persistentContainer.performBackgroundTask { [weak self] context in
@@ -124,6 +136,24 @@ final class CoreDataManager {
                 self.save(context: context)
             }
             
+            callback()
+        }
+    }
+    
+    func saveBotMessage(message: KitMessage, callback: @escaping () -> Void) {
+        delegate.persistentContainer.performBackgroundTask { [weak self] context in
+            guard let self = self else { return }
+            
+            let botMessage = BotMessage(context: context)
+            
+            botMessage.message = message.content
+            botMessage.senderArn = message.senderArn
+            botMessage.senderName = message.senderName
+            botMessage.id = message.messageId
+            botMessage.lat = message.lat
+            botMessage.lng = message.lng
+            
+            self.save(context: context)
             callback()
         }
     }

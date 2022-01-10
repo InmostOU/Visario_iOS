@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20G165" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G165" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="BotMessage" representedClassName="BotMessage" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String"/>
+        <attribute name="lat" optional="YES" attributeType="String"/>
+        <attribute name="lng" optional="YES" attributeType="String"/>
+        <attribute name="message" attributeType="String"/>
+        <attribute name="senderArn" attributeType="String"/>
+        <attribute name="senderName" attributeType="String"/>
+    </entity>
     <entity name="Channel" representedClassName=".Channel" syncable="YES">
         <attribute name="channelArn" attributeType="String"/>
         <attribute name="channelDescription" optional="YES" attributeType="String"/>
@@ -12,7 +20,7 @@
         <attribute name="privacy" attributeType="String"/>
         <relationship name="messages" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="channel" inverseEntity="Message"/>
     </entity>
-    <entity name="Message" representedClassName=".Message" syncable="YES">
+    <entity name="Message" representedClassName=".Message" syncable="YES" codeGenerationType="class">
         <attribute name="audioDuration" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="channelArn" attributeType="String"/>
         <attribute name="content" attributeType="String"/>
@@ -36,5 +44,6 @@
     <elements>
         <element name="Channel" positionX="-54" positionY="81" width="128" height="179"/>
         <element name="Message" positionX="-63" positionY="-18" width="128" height="314"/>
+        <element name="BotMessage" positionX="-54" positionY="135" width="128" height="119"/>
     </elements>
 </model>

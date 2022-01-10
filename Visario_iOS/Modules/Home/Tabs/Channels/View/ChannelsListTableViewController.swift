@@ -62,6 +62,7 @@ final class ChannelsListTableViewController: UITableViewController {
         setupTableView()
         setupWebSocket()
         getAllChannels()
+        getCtatBotMessages()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,6 +76,7 @@ final class ChannelsListTableViewController: UITableViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
+        view.hideHUD()
         channelsViewModel.isChannelsListInFocus = false
         ConnectivityManager.shared.removeListener(listener: self)
     }
@@ -116,10 +118,26 @@ final class ChannelsListTableViewController: UITableViewController {
             DispatchQueue.main.async {
                 self.channelsRefreshControl.endRefreshing()
                 switch response {
-                case .success(_):
+                case .success:
                     self.view.hideHUD()
                     self.tableView.reloadData()
-                case .failure(_):
+                case .failure:
+                    self.view.showFailedHUD()
+                }
+            }
+        }
+    }
+    
+    private func getCtatBotMessages() {
+        channelsViewModel.getChatBotMessages { [weak self] response in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                //self.channelsRefreshControl.endRefreshing()
+                switch response {
+                case .success:
+                    self.view.hideHUD()
+                    self.tableView.reloadData()
+                case .failure:
                     self.view.showFailedHUD()
                 }
             }

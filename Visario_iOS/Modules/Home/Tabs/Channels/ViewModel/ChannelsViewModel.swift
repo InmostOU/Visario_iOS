@@ -62,6 +62,13 @@ final class ChannelsViewModel {
         }
     }
     
+    func getChatBotMessages(callback: @escaping VoidCallback) {
+        coreDataService.getChatBotMessages { coreDataBotMessages in
+            self.chatBotMessages = self.messagesConverter.kitMessages(from: coreDataBotMessages)
+            callback(.success(()))
+        }
+    }
+    
     func createMeeting(callback: @escaping (Result<String, Error>) -> Void) {
         meetingAPIService.createMeeting { result in
             switch result {
@@ -134,7 +141,7 @@ final class ChannelsViewModel {
             switch response {
             case .success(let void):
                 self.channels.removeAll { $0.channelArn == channelArn }
-                self.coreDataService.deleteChannel(by: channelArn)
+                self.coreDataService.deleteChannel(by: channelArn) { }
                 callback(.success(void))
             case .failure(let error):
                 callback(.failure(error))
@@ -286,6 +293,34 @@ final class ChannelsViewModel {
         }
     }
     
+    func sendMessageToBot(message: KitMessage, callback: @escaping VoidCallback) {
+        chatBotMessages.append(message)
+        callback(.success(()))
+        
+        self.coreDataService.saveBotMessage(message) {
+            let botMessage = ChatBotMessageModel(message: message.content, lat: message.lat ?? "", lng: message.lng ?? "")
+            self.channelsAPIService.sendChatBotMessage(message: botMessage) { response in
+                switch response {
+                case .success(let botResponseMessage):
+                    self.saveBotMessage(botMessage: botResponseMessage) {
+                        callback(.success(()))
+                    }
+                case .failure(let error):
+                    self.view?.showError(error: error)
+                    callback(.failure(error))
+                }
+            }
+        }
+    }
+    
+    private func saveBotMessage(botMessage: ChatBotMessageModel, callback: @escaping () -> Void) {
+        let kitMessage = messagesConverter.kitMessage(from: botMessage)
+        coreDataService.saveBotMessage(kitMessage) {
+            self.chatBotMessages.append(kitMessage)
+            callback()
+        }
+    }
+    
     func resendMessage(message: KitMessage, callback: @escaping VoidCallback) {
         channelsAPIService.sendMessage(message: message, callback: callback)
     }
@@ -337,11 +372,6 @@ final class ChannelsViewModel {
                 callback()
             }
         }
-    }
-    
-    func sendMessageToBot(message: KitMessage, callback: @escaping(Result<Void, Error>) -> Void) {
-        chatBotMessages.append(message)
-        callback(.success(()))
     }
     
     func setActivityState(of contact: ContactModel) {

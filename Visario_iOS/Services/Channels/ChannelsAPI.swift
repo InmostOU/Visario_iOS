@@ -23,6 +23,7 @@ enum ChannelsAPI {
     case editMessage(message: KitMessage)
     case deleteMessage(id: String)
     case getWebSocketSignedURL
+    case sendChatBotMessage(message: ChatBotMessageModel)
 }
 
 // MARK: - TargetType
@@ -64,6 +65,8 @@ extension ChannelsAPI: TargetType {
             return "/messages/send"
         case .sendAttachmentMessage:
             return "/messages/sendWithAttachment"
+        case .sendChatBotMessage:
+            return "/chat-bot/message"
         case .editMessage:
             return "/messages/edit"
         case .deleteMessage:
@@ -77,7 +80,7 @@ extension ChannelsAPI: TargetType {
         switch self {
         case .getAllChannels, .getMessagesList, .leaveChannel, .findChannels, .getWebSocketSignedURL, .getChannelMembers, .getChannelMembersActivityStatus:
             return .get
-        case .sendTextMessage, .sendAttachmentMessage, .createChannel, .addMemberToChannel, .editMessage:
+        case .sendTextMessage, .sendAttachmentMessage, .sendChatBotMessage, .createChannel, .addMemberToChannel, .editMessage:
             return .post
         case .deleteMessage:
             return .delete
@@ -96,6 +99,8 @@ extension ChannelsAPI: TargetType {
             return "{\"messageId\":\"\(message.messageId)\", \"content\":\"\(message.content)\", \"channelArn\":\"\(message.channelArn)\"}".data(using: .utf8) ?? Data()
         case .sendTextMessage(let message):
             return messageJSONData(from: message)
+        case .sendChatBotMessage(let botMessage):
+            return "{\"message\":\"\(botMessage.message)\", \"lat\":\"\(botMessage.lat)\", \"lng\":\"\(botMessage.lng)\"}".data(using: .utf8) ?? Data()
         }
     }
     
@@ -108,14 +113,12 @@ extension ChannelsAPI: TargetType {
              .getChannelMembers(let channelArn),
              .getChannelMembersActivityStatus(let channelArn):
             return .requestParameters(parameters: ["channelArn" : channelArn], encoding: URLEncoding.default)
-        case .createChannel, .addMemberToChannel, .editMessage:
+        case .createChannel, .addMemberToChannel, .editMessage, .sendTextMessage, .sendChatBotMessage:
             return .requestData(sampleData)
         case .deleteMessage(let messageId):
             return .requestParameters(parameters: ["messageId" : messageId], encoding: URLEncoding.default)
         case .findChannels(let channelName):
             return .requestParameters(parameters: ["channelName" : channelName], encoding: URLEncoding.default)
-        case .sendTextMessage:
-            return .requestData(sampleData)
         case .sendAttachmentMessage(let message):
             return multipartsTask(message: message)
         }
@@ -144,8 +147,6 @@ extension ChannelsAPI: TargetType {
     }
     
     private func multipartsTask(message: KitMessage) -> Task {
-        //let fileName = message.content.components(separatedBy: "/").last ?? ""
-        //let fileType = fileName.components(separatedBy: ".").last ?? ""
         let fileType = message.fileName?.components(separatedBy: ".").last ?? ""
         let mimeType = mimeTypeForPath(path: message.content)
         
