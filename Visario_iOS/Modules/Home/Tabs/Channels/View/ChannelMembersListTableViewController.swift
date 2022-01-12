@@ -92,7 +92,6 @@ final class ChannelMembersListTableViewController: UITableViewController {
     }
     
     private func getChannelMembersActivityStatus() {
-        
         channelsViewModel.getChannelMembersActivityStatus(channelArn: channelArn) { [weak self] response in
             guard let self = self else { return }
             switch response {

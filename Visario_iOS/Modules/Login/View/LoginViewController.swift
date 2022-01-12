@@ -135,7 +135,7 @@ final class LoginViewController: UIViewController {
     private lazy var socialNetworkButtonsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 10
+        stackView.spacing = 16
         return stackView
     }()
     
@@ -278,14 +278,46 @@ final class LoginViewController: UIViewController {
     }
     
     @objc private func googleLoginButtonTapped() {
-        let signInConfig = GIDConfiguration(clientID: "796447152500-k5tclb6etfl2obsa01nrm8es21h4suo1.apps.googleusercontent.com")
-        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
-            guard error == nil else { return }
-            print("userID:", user?.userID ?? "No ID")
-          }
+        getGoogleIdToken { result in
+            switch result {
+            case .success(let token):
+                /// send token to backend!
+                print(token)
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     // MARK: - Private
+    
+    private func getGoogleIdToken(callback: @escaping (Result<(String, String), Error>) -> Void) {
+        let signInConfig = GIDConfiguration(clientID: "796447152500-k5tclb6etfl2obsa01nrm8es21h4suo1.apps.googleusercontent.com")
+        
+        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
+            guard error == nil else { return }
+            guard let user = user else { return }
+
+            user.authentication.do { authentication, error in
+                guard error == nil else {
+                    callback(.failure(error!))
+                    return }
+                guard let authentication = authentication else { return }
+                guard let idToken = authentication.idToken else { return }
+                
+                guard let idExpirationTime = authentication.idTokenExpirationDate else { return }
+                let accessTokenExpirationDate = authentication.accessTokenExpirationDate
+                let idTimeIntervalSince1970 = idExpirationTime.timeIntervalSince1970
+                let accessTokenTimeIntervalSince1970 = accessTokenExpirationDate.timeIntervalSince1970
+                print("\n", "idToken:", idToken)
+                print("accessToken:", authentication.accessToken, "\n")
+                print("refreshToken", authentication.refreshToken, "\n")
+                print(idTimeIntervalSince1970, "\n")
+                print(accessTokenTimeIntervalSince1970, "\n")
+                //callback(.success((idToken, timeInterval.description)))
+            }
+        }
+    }
     
     private func checkLoginButtonEnabling() {
         guard !(mailTextField.text?.isEmpty ?? false),
