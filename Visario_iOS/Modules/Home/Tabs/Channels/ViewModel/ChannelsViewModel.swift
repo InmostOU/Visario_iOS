@@ -166,7 +166,7 @@ final class ChannelsViewModel {
         }
     }
     
-    func getContactsActivityStatus(by userArn: String, callback: @escaping (Result<Void, Error>) -> Void) {
+    func getContactsActivityStatus(for userArn: String, callback: @escaping (Result<Void, Error>) -> Void) {
         contactsService.getContactsActivityStatus(by: userArn) { [weak self] response in
             guard let self = self else { return }
             switch response {

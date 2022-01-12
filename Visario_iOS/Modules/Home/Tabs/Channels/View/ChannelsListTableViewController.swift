@@ -73,7 +73,7 @@ final class ChannelsListTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
         view.hideHUD()

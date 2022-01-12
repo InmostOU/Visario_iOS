@@ -82,7 +82,7 @@ final class ChannelMembersListTableViewController: UITableViewController {
         channelsViewModel.getChannelMembers(channelArn: channelArn) { [weak self] response in
             guard let self = self else { return }
             switch response {
-            case .success(_):
+            case .success:
                 self.getChannelMembersActivityStatus()
             case .failure(let error):
                 self.view.hideHUD()
@@ -95,10 +95,11 @@ final class ChannelMembersListTableViewController: UITableViewController {
         channelsViewModel.getChannelMembersActivityStatus(channelArn: channelArn) { [weak self] response in
             guard let self = self else { return }
             switch response {
-            case .success(_):
+            case .success:
                 self.getUserContactsActivityStatus()
             case .failure(let error):
-                self.view.showFailedHUD()
+                self.view.hideHUD()
+                self.tableView.reloadData()
                 print(error)
             }
         }
@@ -106,16 +107,10 @@ final class ChannelMembersListTableViewController: UITableViewController {
     
     private func getUserContactsActivityStatus() {
         guard let userProfile = KeyChainStorage.shared.getProfile() else { return }
-        channelsViewModel.getContactsActivityStatus(by: userProfile.userArn) { [weak self] response in
+        channelsViewModel.getContactsActivityStatus(for: userProfile.userArn) { [weak self] response in
             guard let self = self else { return }
-            switch response {
-            case .success(_):
-                self.view.hideHUD()
-                self.tableView.reloadData()
-            case .failure(let error):
-                self.view.showFailedHUD()
-                print(error)
-            }
+            self.tableView.reloadData()
+            self.view.hideHUD()
         }
     }
     
