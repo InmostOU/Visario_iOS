@@ -329,7 +329,6 @@ final class ChannelsViewModel {
         guard let channelIndex = channels.firstIndex(where: { $0.channelArn == message.channelArn }) else { return }
         guard let messageIndex = channels[channelIndex].messages.firstIndex(where: { $0.messageId == message.messageId }) else { return }
         channels[channelIndex].messages[messageIndex].content = message.content
-        callback(.success(()))
         
         coreDataService.updateMessage(message) {
             self.channelsAPIService.editMessage(message: message, callback: callback)

@@ -652,7 +652,7 @@ class ChatViewController: MessagesViewController {
             resetTimer()
         } else {
             let inputText = messageInputBar.inputTextView.text ?? ""
-            switch messageInputBar.sendButton.title {
+            switch sendBarButton.title {
             case SendButtonType.send.rawValue:
                 sendMessage(with: inputText)
             case SendButtonType.save.rawValue:
