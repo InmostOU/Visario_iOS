@@ -280,9 +280,11 @@ final class LoginViewController: UIViewController {
     @objc private func googleLoginButtonTapped() {
         getGoogleIdToken { result in
             switch result {
-            case .success(let token):
-                /// send token to backend!
-                print(token)
+            case .success(let idToken):
+                self.view.showRotationHUD()
+                self.authViewModel.authenticationViaGoogle(with: idToken) {
+                    self.view.hideHUD()
+                }
             case .failure(let error):
                 print(error)
             }
@@ -291,8 +293,8 @@ final class LoginViewController: UIViewController {
     
     // MARK: - Private
     
-    private func getGoogleIdToken(callback: @escaping (Result<(String, String), Error>) -> Void) {
-        let signInConfig = GIDConfiguration(clientID: "796447152500-k5tclb6etfl2obsa01nrm8es21h4suo1.apps.googleusercontent.com")
+    private func getGoogleIdToken(callback: @escaping (Result<String, Error>) -> Void) {
+        let signInConfig = GIDConfiguration(clientID: "843481142159-97t19lh06n87hdi7rnsp4k1b8q3q3v0k.apps.googleusercontent.com")
         
         GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
             guard error == nil else { return }
@@ -301,20 +303,10 @@ final class LoginViewController: UIViewController {
             user.authentication.do { authentication, error in
                 guard error == nil else {
                     callback(.failure(error!))
-                    return }
-                guard let authentication = authentication else { return }
-                guard let idToken = authentication.idToken else { return }
-                
-                guard let idExpirationTime = authentication.idTokenExpirationDate else { return }
-                let accessTokenExpirationDate = authentication.accessTokenExpirationDate
-                let idTimeIntervalSince1970 = idExpirationTime.timeIntervalSince1970
-                let accessTokenTimeIntervalSince1970 = accessTokenExpirationDate.timeIntervalSince1970
-                print("\n", "idToken:", idToken)
-                print("accessToken:", authentication.accessToken, "\n")
-                print("refreshToken", authentication.refreshToken, "\n")
-                print(idTimeIntervalSince1970, "\n")
-                print(accessTokenTimeIntervalSince1970, "\n")
-                //callback(.success((idToken, timeInterval.description)))
+                    return
+                }
+                guard let idToken = authentication?.idToken else { return }
+                callback(.success(idToken))
             }
         }
     }

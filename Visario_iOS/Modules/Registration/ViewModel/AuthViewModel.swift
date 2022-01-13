@@ -56,6 +56,18 @@ final class AuthViewModel {
         }
     }
     
+    func authenticationViaGoogle(with idToken: String, callback: @escaping () -> Void) {
+        authenticationService.loginViaGoogle(idToken: idToken) { [weak view] result in
+            callback()
+            switch result {
+            case .success:
+                UIApplication.shared.window?.rootViewController = ChimeTabBarController()
+            case .failure(let error):
+                view?.showAlert(title: "Error", message: "Something went wrong :(,\n\(error)")
+            }
+        }
+    }
+    
     func forgotPassword(email: String, callback: @escaping (Result<Void, Error>) -> Void) {
         authenticationService.forgotPassword(email: email, callback: callback)
     }

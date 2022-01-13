@@ -19,6 +19,7 @@ enum Constants {
     
     static let loginPath = "/login"
     static let loginWithFbPath = "/facebookLogin"
+    static let loginWithGooglePath = "/googleLogin"
     static let registerPath = "/register"
     static let changePasswordPath = "/changePassword"
     static let forgotPasswordPath = "/forgot-password"

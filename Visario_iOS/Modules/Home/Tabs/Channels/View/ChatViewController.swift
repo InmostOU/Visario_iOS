@@ -659,6 +659,7 @@ class ChatViewController: MessagesViewController {
                 editMessage(with: inputText)
                 messageInputBar.endEditing(true)
                 messageInputBar.sendButton.title = SendButtonType.send.rawValue
+                sendBarButton.title = SendButtonType.send.rawValue
             default:
                 break
             }
