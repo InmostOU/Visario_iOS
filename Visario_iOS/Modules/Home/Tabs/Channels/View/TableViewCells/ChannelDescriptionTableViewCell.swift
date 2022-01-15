@@ -11,19 +11,23 @@ final class ChannelDescriptionTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
-    private let placeholderText = "Description text ..."
-    
     weak var delegate: CreateChannelCellDelegate?
     
     // MARK: - UI Elements
     
     private lazy var descriptionTextView: UITextView = {
         let textView = UITextView()
-        textView.text = placeholderText
         textView.font = .systemFont(ofSize: 16, weight: .regular)
-        textView.textColor = .lightGray
         textView.delegate = self
         return textView
+    }()
+    
+    private lazy var placeholderLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Description text ..."
+        label.textColor = .placeholderText
+        label.font = .systemFont(ofSize: 16, weight: .regular)
+        return label
     }()
     
     // MARK: - Lifecycle
@@ -41,6 +45,7 @@ final class ChannelDescriptionTableViewCell: UITableViewCell {
     
     private func setupSubviews() {
         contentView.addSubview(descriptionTextView)
+        descriptionTextView.addSubview(placeholderLabel)
     }
     
     private func addConstraints() {
@@ -48,24 +53,16 @@ final class ChannelDescriptionTableViewCell: UITableViewCell {
             $0.edges.equalTo(contentView.layoutMarginsGuide)
             $0.height.equalTo(100)
         }
+        placeholderLabel.snp.makeConstraints {
+            $0.height.equalTo(35)
+            $0.leading.equalToSuperview().offset(5)
+        }
     }
 }
 
 // MARK: - UITextViewDelegate
 
 extension ChannelDescriptionTableViewCell: UITextViewDelegate {
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        guard descriptionTextView.textColor == .lightGray else { return }
-        descriptionTextView.text = ""
-        descriptionTextView.textColor = .black
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        guard descriptionTextView.text.isEmpty else  { return }
-        descriptionTextView.text = placeholderText
-        descriptionTextView.textColor = .lightGray
-    }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
@@ -76,6 +73,7 @@ extension ChannelDescriptionTableViewCell: UITextViewDelegate {
     }
     
     func textViewDidChangeSelection(_ textView: UITextView) {
+        placeholderLabel.isHidden = !textView.text.isEmpty
         delegate?.setChannelDescription(description: textView.text)
     }
 }
