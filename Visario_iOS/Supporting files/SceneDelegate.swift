@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         
         /// autologin
-        //AuthViewModel().loginUser(email: "vitaliy.butsan@inmost.pro", password: "1vbutsan$") { }
+        AuthViewModel().loginUser(email: "vitaliy.butsan@inmost.pro", password: "1vbutsan$") { }
         //AuthViewModel().loginUser(email: "visarioBond007@gmail.com", password: "visarioBond007!") { }
         //AuthViewModel().loginUser(email: "mcferrin@mail.ru", password: "mcferrin12345$") { }
         

@@ -211,7 +211,7 @@ final class LoginViewController: UIViewController {
         guard let email = mailTextField.text, let password = passwordTextField.text else { return }
         self.view.endEditing(true)
         self.startDoneButtonSpinner(button: sender)
-        authViewModel.loginUser(email: email, password: password) {
+        authViewModel.loginUser(email: email.lowercased(), password: password) {
             self.stopDoneButtonSpinner(button: sender)
         }
     }

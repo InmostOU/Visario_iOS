@@ -134,7 +134,7 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
         guard let email = mailTextField.text else { return }
         view.endEditing(true)
         startDoneButtonSpinner(button: sender)
-        authViewModel.forgotPassword(email: email) { [weak self] response in
+        authViewModel.forgotPassword(email: email.lowercased()) { [weak self] response in
             guard let self = self else { return }
             self.stopDoneButtonSpinner(button: sender)
             switch response {
