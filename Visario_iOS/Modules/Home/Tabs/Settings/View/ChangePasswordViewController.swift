@@ -16,7 +16,17 @@ final class ChangePasswordViewController: UIViewController {
     
     // MARK: - UI Elements
     
-    private lazy var containerStackView: UIStackView = {
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        return scrollView
+    }()
+    
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private lazy var fieldsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 30
@@ -74,6 +84,7 @@ final class ChangePasswordViewController: UIViewController {
         super.viewDidLoad()
         
         setupNavController()
+        setupKeyboardObservers()
         setupViews()
         configureConstraints()
     }
@@ -82,21 +93,38 @@ final class ChangePasswordViewController: UIViewController {
         navigationItem.title = "Change Password"
     }
     
+    private func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
     private func setupViews() {
         view.backgroundColor = .white
-        view.addSubview(containerStackView)
-        view.addSubview(saveButton)
+        view.addSubview(scrollView)
+        
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubview(fieldsStackView)
+        contentView.addSubview(saveButton)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         
-        containerStackView.addArrangedSubview(currentPasswordTextField)
-        containerStackView.addArrangedSubview(newPasswordTextField)
-        containerStackView.addArrangedSubview(repeatPasswordTextField)
+        fieldsStackView.addArrangedSubview(currentPasswordTextField)
+        fieldsStackView.addArrangedSubview(newPasswordTextField)
+        fieldsStackView.addArrangedSubview(repeatPasswordTextField)
     }
     
     private func configureConstraints() {
-        containerStackView.snp.makeConstraints {
+        scrollView.snp.makeConstraints {
+            $0.left.right.equalToSuperview()
+            $0.top.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        contentView.snp.makeConstraints {
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.height.equalTo(scrollView.frameLayoutGuide)
+        }
+        fieldsStackView.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.width.equalTo(view.layoutMarginsGuide)
         }
@@ -113,7 +141,7 @@ final class ChangePasswordViewController: UIViewController {
             $0.height.equalTo(currentPasswordTextField)
         }
         saveButton.snp.makeConstraints {
-            $0.top.equalTo(containerStackView.snp.bottom).offset(60)
+            $0.top.equalTo(fieldsStackView.snp.bottom).offset(60)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(150)
             $0.height.equalTo(40)
@@ -130,7 +158,6 @@ final class ChangePasswordViewController: UIViewController {
             saveButton.backgroundColor = .gray
             return
         }
-        // is passwords valid, is newPassword == repeatPassword
         guard isValid(currentPasswordTextField),
               isValid(newPasswordTextField),
               isValid(repeatPasswordTextField),
@@ -148,6 +175,20 @@ final class ChangePasswordViewController: UIViewController {
     private func isValid(_ textField: UITextField) -> Bool {
         guard let text = textField.text, !text.isEmpty else { return false }
         return text.isValidPassword()
+    }
+    
+    @objc func adjustForKeyboard(notification: Notification) {
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            scrollView.contentInset = .zero
+        } else {
+            guard let userInfo = notification.userInfo else { return }
+            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+            keyboardFrame = view.convert(keyboardFrame, from: nil)
+
+            var contentInset: UIEdgeInsets = scrollView.contentInset
+            contentInset.bottom = keyboardFrame.size.height
+            scrollView.contentInset = contentInset
+        }
     }
 }
 
@@ -172,9 +213,9 @@ final class ChangePasswordViewController: UIViewController {
             guard let self = self else { return }
             self.stopDoneButtonSpinner(button: sender)
             switch response {
-            case .success(_):
+            case .success:
                 self.view.showSuccessHUD()
-            case .failure(_):
+            case .failure:
                 self.view.showFailedHUD()
             }
         }
