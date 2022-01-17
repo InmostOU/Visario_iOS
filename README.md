@@ -32,5 +32,5 @@ The Visario project is an example of the implementation of a communication platf
 
 **For Run**
 - Put to project root folder AmazonChime binaries (4 folders) from: https://github.com/aws/amazon-chime-sdk-ios/releases
-- Run pod install
+- Run pod install, (fb through SPM!)
 - Enjoy :)
