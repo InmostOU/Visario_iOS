@@ -187,7 +187,7 @@ final class LoginViewController: UIViewController {
         }
     }
     
-    private func startDoneButtonSpinner(button: UIButton) {
+    private func startSpinner(for button: UIButton) {
         DispatchQueue.main.async {
             button.setTitle("", for: .normal)
             button.addSubview(self.spinner)
@@ -198,7 +198,7 @@ final class LoginViewController: UIViewController {
         }
     }
     
-    private func stopDoneButtonSpinner(button: UIButton) {
+    private func stopSpinner(in button: UIButton) {
         spinner.stopAnimating()
         spinner.removeFromSuperview()
         button.setTitle("Done", for: .normal)
@@ -210,9 +210,9 @@ final class LoginViewController: UIViewController {
     private func loginTapped(_ sender: UIButton) {
         guard let email = mailTextField.text, let password = passwordTextField.text else { return }
         self.view.endEditing(true)
-        self.startDoneButtonSpinner(button: sender)
+        self.startSpinner(for: sender)
         authViewModel.loginUser(email: email.lowercased(), password: password) {
-            self.stopDoneButtonSpinner(button: sender)
+            self.stopSpinner(in: sender)
         }
     }
     
@@ -244,10 +244,10 @@ final class LoginViewController: UIViewController {
                     print("No Password")
                     return
                 }
-                self.startDoneButtonSpinner(button: self.loginButton)
+                self.startSpinner(for: self.loginButton)
                 self.authViewModel.loginUser(email: profile.email, password: password) { [weak self] in
                     guard let self = self else { return }
-                    self.stopDoneButtonSpinner(button: self.loginButton)
+                    self.stopSpinner(in: self.loginButton)
                 }
             }
         }
@@ -269,9 +269,9 @@ final class LoginViewController: UIViewController {
                 print("Cancelled")
             } else {
                 guard let fbToken = result?.token?.tokenString else { return }
-                self.view.showRotationHUD()
+                self.startSpinner(for: self.facebookButton)
                 self.authViewModel.authenticationViaFacebook(with: fbToken) {
-                    self.view.hideHUD()
+                    self.stopSpinner(in: self.facebookButton)
                 }
             }
         }
@@ -281,9 +281,9 @@ final class LoginViewController: UIViewController {
         getGoogleIdToken { result in
             switch result {
             case .success(let idToken):
-                self.view.showRotationHUD()
+                self.startSpinner(for: self.googleButton)
                 self.authViewModel.authenticationViaGoogle(with: idToken) {
-                    self.view.hideHUD()
+                    self.stopSpinner(in: self.googleButton)
                 }
             case .failure(let error):
                 print(error)

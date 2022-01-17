@@ -14,12 +14,14 @@ final class ChatBotRoomViewController: MessagesViewController {
     // MARK: - Properties
     
     private let channelsViewModel: ChannelsViewModel
+    private let locationService: LocationService
     private var sender: Sender!
     
     // MARK: - Lifecycle
     
     init(viewModel: ChannelsViewModel) {
         self.channelsViewModel = viewModel
+        self.locationService = LocationService()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -34,6 +36,7 @@ final class ChatBotRoomViewController: MessagesViewController {
         setupMessagesCollectionView()
         removeMessageAvatars()
         setSender()
+        setupLocationManager()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,6 +72,30 @@ final class ChatBotRoomViewController: MessagesViewController {
     private func setSender() {
         guard let userProfile = KeyChainStorage.shared.getProfile() else { return }
         sender = Sender(senderId: userProfile.userArn, displayName: userProfile.username)
+    }
+    
+    private func setupLocationManager() {
+        locationService.requestLocationAuthorization()
+        
+        locationService.didChangeStatus = { [weak self] isChanged in
+            switch isChanged {
+            case true:
+                self?.getCurrentLocationCoordinates()
+            case false:
+                print("Location access status: FALSE")
+            }
+        }
+    }
+    
+    private func getCurrentLocationCoordinates() {
+        locationService.newLocation = { result in
+            switch result {
+            case .success(let location):
+                print(location.coordinate.latitude, location.coordinate.longitude)
+            case .failure(let error):
+                assertionFailure("Error getting the users location \(error)")
+            }
+        }
     }
     
     private func reloadTableAndScrollToBottom() {

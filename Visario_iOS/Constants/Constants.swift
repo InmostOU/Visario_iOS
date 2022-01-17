@@ -11,7 +11,7 @@ import Foundation
 
 enum Constants {
     
-    static let baseURL = "http://18.193.6.59:8081"
+    static let baseURL = "http://18.193.7.245:8081"
     static let authURL = baseURL + "/auth"
     static let meetingPath = "/meeting/getMeeting?meetingId="
     static let meetingURL = baseURL + meetingPath

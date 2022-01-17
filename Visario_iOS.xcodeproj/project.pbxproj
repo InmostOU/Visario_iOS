@@ -130,6 +130,7 @@
 		FEE7B751277C560200D9C104 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = FEE7B750277C560200D9C104 /* FacebookCore */; };
 		FEE7B753277C560200D9C104 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = FEE7B752277C560200D9C104 /* FacebookLogin */; };
 		FEF23D9C273BC14F00762A06 /* SkyFloatingPasswordTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF23D9B273BC14F00762A06 /* SkyFloatingPasswordTextField.swift */; };
+		FEFD43BE2795FBB900994F7E /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFD43BD2795FBB900994F7E /* LocationService.swift */; };
 		FEFFE93D26C9A9260025E6FE /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFFE93C26C9A9260025E6FE /* Sender.swift */; };
 		FEFFE94026C9A9550025E6FE /* KitMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFFE93F26C9A9550025E6FE /* KitMessage.swift */; };
 		FEFFE95226CAAB4F0025E6FE /* CreateChannelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFFE95126CAAB4F0025E6FE /* CreateChannelTableViewController.swift */; };
@@ -312,6 +313,7 @@
 		FEE111DF27429F3F00E8793B /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		FEE1BDE326BC4543002C707C /* KeyChainStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainStorage.swift; sourceTree = "<group>"; };
 		FEF23D9B273BC14F00762A06 /* SkyFloatingPasswordTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkyFloatingPasswordTextField.swift; sourceTree = "<group>"; };
+		FEFD43BD2795FBB900994F7E /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		FEFFE93C26C9A9260025E6FE /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
 		FEFFE93F26C9A9550025E6FE /* KitMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitMessage.swift; sourceTree = "<group>"; };
 		FEFFE95126CAAB4F0025E6FE /* CreateChannelTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChannelTableViewController.swift; sourceTree = "<group>"; };
@@ -622,7 +624,6 @@
 		FE35AD9126B9C11B006EDFEC /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				FEC18DCE2747F73400CA47FB /* RecordingService */,
 				FE35AD9226B9C120006EDFEC /* AuthAPI */,
 				FEB614AC26C50A3100FAFCF5 /* Channels */,
 				FE5F3DCA26C1053B00C7149A /* ContactsService */,
@@ -630,8 +631,10 @@
 				FE321A2526F0D6950050D157 /* DataModelConverters */,
 				FE8162B227045C9A004A2BD7 /* FilesService */,
 				FEE1BDE226BC4533002C707C /* KeyChainStorage */,
+				FEFD43BC2795FB8400994F7E /* LocationManager */,
 				861037CC26DCDEEF00AD6BDB /* MeetingService */,
 				FE5C4E1C26EA18A1000E97EE /* ReachabilityService */,
+				FEC18DCE2747F73400CA47FB /* RecordingService */,
 				FEAE034F26DCCA2A0008B1EE /* WebSocketService */,
 			);
 			path = Services;
@@ -956,6 +959,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		FEFD43BC2795FB8400994F7E /* LocationManager */ = {
+			isa = PBXGroup;
+			children = (
+				FEFD43BD2795FBB900994F7E /* LocationService.swift */,
+			);
+			path = LocationManager;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1171,6 +1182,7 @@
 				FE35ADA426B9C5E4006EDFEC /* RegistrationViewController.swift in Sources */,
 				86CA16B726C566AB00E411BF /* TableViewCellModels.swift in Sources */,
 				FE864A5A26F0D77B00F875FA /* ChannelsConverter.swift in Sources */,
+				FEFD43BE2795FBB900994F7E /* LocationService.swift in Sources */,
 				FE556D8126C113E0004FF7FB /* ContactsViewModel.swift in Sources */,
 				FEC96FB726BD807C00EBEB70 /* ContactsListTableViewController.swift in Sources */,
 				FEFFE95226CAAB4F0025E6FE /* CreateChannelTableViewController.swift in Sources */,
