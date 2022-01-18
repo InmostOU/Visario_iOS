@@ -71,10 +71,10 @@
 	<string>Visario requires camera access to enable video meetings</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs FaceID access for biometric authentication</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>App want to access your location</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Application need your location for bot search places</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>App want to access your location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Visario requires microphone access to enable voice meetings</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

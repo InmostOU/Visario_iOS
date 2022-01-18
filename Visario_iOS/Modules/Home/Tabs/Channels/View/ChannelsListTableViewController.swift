@@ -76,7 +76,7 @@ final class ChannelsListTableViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        //view.hideHUD()
+        view.hideHUD()
         channelsViewModel.isChannelsListInFocus = false
         ConnectivityManager.shared.removeListener(listener: self)
     }

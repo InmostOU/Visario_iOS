@@ -10,6 +10,9 @@ import CoreLocation
 final class LocationService: NSObject {
     
     private let manager: CLLocationManager
+    private(set) var currentLocation: CLLocation?
+    
+    private var timer: Timer?
 
     init(manager: CLLocationManager = .init()) {
         self.manager = manager
@@ -36,6 +39,17 @@ final class LocationService: NSObject {
     func getLocation() {
         manager.requestLocation()
     }
+    
+    func stoppingGettingLocation() {
+        timer?.invalidate()
+    }
+    
+    func startingToGetLocation() {
+        getLocation()
+        timer = .scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
+            self.getLocation()
+        }
+    }
 
     deinit {
         manager.stopUpdatingLocation()
@@ -53,6 +67,7 @@ extension LocationService: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.sorted(by: {$0.timestamp > $1.timestamp}).first {
             newLocation?(.success(location))
+            currentLocation = location
         }
         manager.stopUpdatingLocation()
     }

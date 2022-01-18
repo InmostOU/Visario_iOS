@@ -47,6 +47,12 @@ final class ChatBotRoomViewController: MessagesViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        locationService.stoppingGettingLocation()
+    }
+    
     private func setupNavigationController() {
         navigationItem.title = "Chat-Bot"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "map.fill"), style: .plain, target: self, action: #selector(mapBarButtonTapped))
@@ -80,20 +86,9 @@ final class ChatBotRoomViewController: MessagesViewController {
         locationService.didChangeStatus = { [weak self] isChanged in
             switch isChanged {
             case true:
-                self?.getCurrentLocationCoordinates()
+                self?.locationService.startingToGetLocation()
             case false:
                 print("Location access status: FALSE")
-            }
-        }
-    }
-    
-    private func getCurrentLocationCoordinates() {
-        locationService.newLocation = { result in
-            switch result {
-            case .success(let location):
-                print(location.coordinate.latitude, location.coordinate.longitude)
-            case .failure(let error):
-                assertionFailure("Error getting the users location \(error)")
             }
         }
     }
@@ -119,6 +114,8 @@ final class ChatBotRoomViewController: MessagesViewController {
     private func newMessage(_ text: String) -> KitMessage {
         let createdTimestamp = Int(Date().timeIntervalSince1970 * 1000)
         let uniqueID = UUID().uuidString
+        let lat = Double(locationService.currentLocation?.coordinate.latitude ?? 0)
+        let lng = Double(locationService.currentLocation?.coordinate.longitude ?? 0)
         
         return KitMessage(sender: sender,
                           messageId: uniqueID,
@@ -137,7 +134,9 @@ final class ChatBotRoomViewController: MessagesViewController {
                           image: nil,
                           file: nil,
                           imageURL: nil,
-                          fileURL: nil)
+                          fileURL: nil,
+                          lat: String(lat),
+                          lng: String(lng))
     }
     
     // MARK: - Actions
