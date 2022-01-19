@@ -193,9 +193,14 @@ final class ChannelsAPIService {
                     callback(.failure(NetworkError.statusCode))
                     return
                 }
-                let messageStringFromBot = String(decoding: response.data, as: UTF8.self)
-                let message = ChatBotMessageModel(message: messageStringFromBot, lat: "", lng: "")
-                callback(.success(message))
+                do {
+                    let places = try JSONDecoder().decode(ChatBotMessageModel.self, from: response.data)
+                    callback(.success(places))
+                } catch {
+                    let messageString = String(decoding: response.data, as: UTF8.self)
+                    let message = ChatBotMessageModel(message: messageString)
+                    callback(.success(message))
+                }
             case .failure(let error):
                 callback(.failure(error))
             }

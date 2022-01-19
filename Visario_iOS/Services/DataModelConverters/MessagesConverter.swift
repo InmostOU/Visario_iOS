@@ -129,11 +129,18 @@ final class MessagesConverter {
     // ChatBotMessageModel -> KitMessage
     func kitMessage(from chatBotMessageModel: ChatBotMessageModel) -> KitMessage {
         let sender = Sender(senderId: "chatBot", displayName: "Robi")
+        var message = ""
+        
+        if let botMessage = chatBotMessageModel.message {
+            message = botMessage
+        } else {
+            message = chatBotMessageModel.results.map(\.name).joined(separator: "\n")
+        }
         
         return KitMessage(sender: sender,
                           messageId: chatBotMessageModel.id ?? "",
                           sentDate: Date(),
-                          content: chatBotMessageModel.message,
+                          content: message,
                           createdTimestamp: 0,
                           lastEditedTimestamp: 0,
                           metadata: "",

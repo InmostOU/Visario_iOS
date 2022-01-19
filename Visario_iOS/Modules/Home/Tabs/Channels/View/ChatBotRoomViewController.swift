@@ -34,16 +34,16 @@ final class ChatBotRoomViewController: MessagesViewController {
         
         setupNavigationController()
         setupMessagesCollectionView()
+        setupLocationManager()
         removeMessageAvatars()
         setSender()
-        setupLocationManager()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         DispatchQueue.main.async {
-            self.messagesCollectionView.scrollToLastItem(at: .top, animated: false)
+            self.messagesCollectionView.scrollToLastItem(at: .bottom, animated: false)
         }
     }
     

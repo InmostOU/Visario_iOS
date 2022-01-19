@@ -298,7 +298,7 @@ final class ChannelsViewModel {
         callback(.success(()))
         
         self.coreDataService.saveBotMessage(message) {
-            let botMessage = ChatBotMessageModel(message: message.content, lat: message.lat ?? "", lng: message.lng ?? "")
+            let botMessage = ChatBotMessageModel(message: message.content, lat: message.lat, lng: message.lng)
             self.channelsAPIService.sendChatBotMessage(message: botMessage) { response in
                 switch response {
                 case .success(let botResponseMessage):

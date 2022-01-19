@@ -100,7 +100,7 @@ extension ChannelsAPI: TargetType {
         case .sendTextMessage(let message):
             return messageJSONData(from: message)
         case .sendChatBotMessage(let botMessage):
-            return "{\"message\":\"\(botMessage.message)\", \"lat\":\"\(botMessage.lat)\", \"lng\":\"\(botMessage.lng)\"}".data(using: .utf8) ?? Data()
+            return "{\"message\":\"\(botMessage.message ?? "")\", \"lat\":\"\(botMessage.lat ?? "")\", \"lng\":\"\(botMessage.lng ?? "")\"}".data(using: .utf8) ?? Data()
         }
     }
     
