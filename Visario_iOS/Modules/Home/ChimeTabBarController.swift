@@ -14,6 +14,7 @@ final class ChimeTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tabBar.isTranslucent = false
         addTabs()
     }
     
