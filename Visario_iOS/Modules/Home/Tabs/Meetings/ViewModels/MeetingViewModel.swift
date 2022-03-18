@@ -282,10 +282,7 @@ final class MeetingViewModel {
 
 extension MeetingViewModel: AudioVideoObserver {
     
-    func audioSessionDidDrop() {
-        print("audio session did drop")
-    }
-    
+    func audioSessionDidDrop() {print("audio session did drop")}
     func audioSessionDidStartConnecting(reconnecting: Bool) { print("audio session did start connecting") }
     func audioSessionDidStart(reconnecting: Bool) {print("audio session did start")}
     func audioSessionDidStopWithStatus(sessionStatus: MeetingSessionStatus) {print("audio session did stop with status: " + sessionStatus.debugDescription)}
@@ -293,6 +290,8 @@ extension MeetingViewModel: AudioVideoObserver {
     func videoSessionDidStartConnecting() {}
     func videoSessionDidStartWithStatus(sessionStatus: MeetingSessionStatus) {}
     func videoSessionDidStopWithStatus(sessionStatus: MeetingSessionStatus) {}
+    func remoteVideoSourcesDidBecomeAvailable(sources: [RemoteVideoSource]) {}
+    func remoteVideoSourcesDidBecomeUnavailable(sources: [RemoteVideoSource]) {}
     func connectionDidRecover() {print("connection did recover")}
     func connectionDidBecomePoor() {print("connection did become poor")}
 }
