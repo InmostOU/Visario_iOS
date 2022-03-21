@@ -144,14 +144,18 @@ final class EditProfileViewController: UIViewController {
     
     @objc
     private func doneButtonTapped() {
-        print("done tapped")
-        print(viewModel.updatedProfile)
-        
-        viewModel.updateUserProfile() { [weak self] in
+        viewModel.updateUserProfile() { [weak self] result in
             guard let self = self else { return }
             
-            self.view.showSuccessHUD()
-            self.navigationController?.popViewController(animated: true)
+            switch result {
+            case .success:
+                self.view.showSuccessHUD()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            case .failure:
+                self.view.showFailedHUD()
+            }
         }
         
     }

@@ -31,21 +31,21 @@ final class EditProfileViewModel {
         configureSettings()
     }
     
-    func updateUserProfile(completion: @escaping () -> Void) {
+    func updateUserProfile(completion: @escaping (Result<Void, Error>) -> Void) {
         
         contactsService.updateProfile(firstName: updatedProfile.firstName, lastName: updatedProfile.lastName, username: updatedProfile.username, birthday: updatedProfile.birthday, about: updatedProfile.about, showEmailTo: updatedProfile.showEmailTo.rawValue, showPhoneNumberTo: updatedProfile.showPhoneNumberTo.rawValue) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
-            case .success(let response):
-                print(response)
-                completion()
+            case .success:
+                completion(.success(()))
                 
                 let updatedProfileModel = ProfileModel(id: self.profile.id, userArn: self.profile.userArn, firstName: self.updatedProfile.firstName, lastName: self.updatedProfile.lastName, username: self.updatedProfile.username, birthday: self.updatedProfile.birthday, email: self.profile.email, phoneNumber: self.profile.phoneNumber, image: self.profile.image, about: self.updatedProfile.about, showEmailTo: self.updatedProfile.showEmailTo, showPhoneNumberTo: self.updatedProfile.showPhoneNumberTo)
                 
                 KeyChainStorage.shared.saveProfile(profile: updatedProfileModel)
                 
             case .failure(let error):
+                completion(.failure(error))
                 print(error)
             }
         }
