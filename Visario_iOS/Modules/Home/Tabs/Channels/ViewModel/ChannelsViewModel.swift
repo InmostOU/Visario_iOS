@@ -427,6 +427,10 @@ final class ChannelsViewModel {
         findedChannels.removeAll()
     }
     
+    func removeAllFilteredMembers() {
+        filteredMembers.removeAll()
+    }
+    
     func writeToPhotoAlbum(image: UIImage) {
         filesService.writeToPhotoAlbum(image: image)
     }

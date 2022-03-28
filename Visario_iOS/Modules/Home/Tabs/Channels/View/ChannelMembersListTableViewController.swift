@@ -38,6 +38,7 @@ final class ChannelMembersListTableViewController: UITableViewController {
         
         usersActivityService.delegate = self
         
+        clearData()
         setupNavigationBar()
         setupSearchController()
         setupTableView()
@@ -56,6 +57,10 @@ final class ChannelMembersListTableViewController: UITableViewController {
         super.viewWillDisappear(animated)
         
         view.hideHUD()
+    }
+    
+    private func clearData() {
+        channelsViewModel.removeAllFilteredMembers()
     }
     
     private func setupNavigationBar() {
@@ -81,11 +86,12 @@ final class ChannelMembersListTableViewController: UITableViewController {
         view.showRotationHUD()
         channelsViewModel.getChannelMembers(channelArn: channelArn) { [weak self] response in
             guard let self = self else { return }
+            self.view.hideHUD()
             switch response {
             case .success:
+                self.tableView.reloadData()
                 self.getChannelMembersActivityStatus()
             case .failure(let error):
-                self.view.hideHUD()
                 self.showError(error: error)
             }
         }
