@@ -45,6 +45,8 @@ class ContactsListTableViewController: UITableViewController {
             self.setBackgroundView()
             switch response {
             case .success(_):
+                self.view.hideHUD()
+                self.tableView.reloadData()
                 self.getContactsActivityStatus()
             case .failure(let error):
                 self.view.showFailedHUD()
