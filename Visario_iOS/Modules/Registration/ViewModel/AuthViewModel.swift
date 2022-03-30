@@ -21,7 +21,7 @@ final class AuthViewModel {
             
             switch result {
             case .success(let void):
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                     self.goToLoginScreen()
                 }
                 callback(.success(void))

@@ -58,7 +58,7 @@ final class ChannelMembersListTableViewController: UITableViewController {
         
         view.hideHUD()
     }
-    
+     
     private func clearData() {
         channelsViewModel.removeAllFilteredMembers()
     }
