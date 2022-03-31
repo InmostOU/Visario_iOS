@@ -16,9 +16,11 @@ final class CoreDataManager {
     private init() { }
     
     // read channels
-    func readChannels(callback: @escaping ([Channel]) -> Void) {
+    func fetchChannels(by channelsArns: [String], callback: @escaping ([Channel]) -> Void) {
         delegate.persistentContainer.performBackgroundTask { context in
             let fetchRequest = NSFetchRequest<Channel>(entityName: "Channel")
+            fetchRequest.predicate = NSPredicate(format: "channelArn in %@", channelsArns)
+            
             do {
                 let channels = try context.fetch(fetchRequest)
                 callback(channels)
@@ -29,7 +31,7 @@ final class CoreDataManager {
         }
     }
     
-    func readBotMessages(callback: @escaping ([BotMessage]) -> Void) {
+    func fetchBotMessages(callback: @escaping ([BotMessage]) -> Void) {
         delegate.persistentContainer.performBackgroundTask { context in
             do {
                 let request = NSFetchRequest<BotMessage>(entityName: "BotMessage")
@@ -60,10 +62,9 @@ final class CoreDataManager {
                     channelManagedObject.isAdmin = channel.isAdmin ?? false
                     channelManagedObject.channelDescription = channel.description
                     
-                    // populate message
                     for message in channel.messages {
                         let messageManagedObject = Message(context: context)
-                        
+                        // populate message
                         messageManagedObject.content = message.content
                         messageManagedObject.createdTimestamp = Int64(message.createdTimestamp)
                         messageManagedObject.lastEditedTimestamp = Int64(message.lastEditedTimestamp)
@@ -252,7 +253,6 @@ final class CoreDataManager {
     // is exist channel
     private func isExist(_ channel: ChannelWithMessagesModel, in context: NSManagedObjectContext) -> Bool {
         let request = NSFetchRequest<Channel>(entityName: "Channel")
-        request.predicate = NSPredicate(format: "channelArn = %@", channel.channelArn)
         
         do {
             let result = try context.fetch(request)

@@ -50,10 +50,13 @@ final class ChannelsViewModel {
     }
     
     func getAllChannels(callback: @escaping VoidCallback) {
-        coreDataService.getChannels { [weak self] coreDataChannels in
+        guard let profile = KeyChainStorage.shared.getProfile() else { return }
+        guard let channelsArns = profile.channels else { return }
+        
+        coreDataService.getChannels(by: channelsArns) { [weak self] coreDataChannels in
             guard let self = self else { return }
             self.channels = self.channelsConverter.channelsWithMessages(from: coreDataChannels)
-            //callback(.success(()))
+            callback(.success(()))
             if ConnectivityManager.shared.isNetworkAvailable {
                 self.getChannelsFromServer(callback: callback)
             } else {
@@ -87,6 +90,7 @@ final class ChannelsViewModel {
             guard let self = self else { return }
             switch response {
             case .success(let serverChannels):
+                self.addChannelsToProfile(channels: serverChannels)
                 self.addMessagesToChannels(channels: serverChannels) { response in
                     switch response {
                     case .success(let channelsWithMessages):
@@ -101,6 +105,12 @@ final class ChannelsViewModel {
                 callback(.failure(error))
             }
         }
+    }
+    
+    private func addChannelsToProfile(channels: [ChannelModel]) {
+        guard var profile = KeyChainStorage.shared.getProfile() else { return }
+        profile.channels = channels.map(\.channelArn)
+        KeyChainStorage.shared.saveProfile(profile: profile)
     }
     
     private func addMessagesToChannels(channels: [ChannelModel], callback: @escaping (Result<[ChannelWithMessagesModel], Error>) -> Void) {

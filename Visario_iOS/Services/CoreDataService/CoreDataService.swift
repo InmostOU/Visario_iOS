@@ -14,12 +14,12 @@ final class CoreDataService {
     
     private let coreDataManager = CoreDataManager.shared
     
-    func getChannels(callback: @escaping ([Channel]) -> Void) {
-        coreDataManager.readChannels(callback: callback)
+    func getChannels(by channelsArns: [String], callback: @escaping ([Channel]) -> Void) {
+        coreDataManager.fetchChannels(by: channelsArns, callback: callback)
     }
     
     func getChatBotMessages(callback: @escaping ([BotMessage]) -> Void) {
-        coreDataManager.readBotMessages(callback: callback)
+        coreDataManager.fetchBotMessages(callback: callback)
     }
     
     func saveChannels(channels: [ChannelWithMessagesModel], callback: @escaping VoidCallback) {

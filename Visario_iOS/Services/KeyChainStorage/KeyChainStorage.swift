@@ -48,7 +48,8 @@ final class KeyChainStorage {
             about: userInfo["about"] as? String ?? "",
             showEmailTo: userInfo["showEmailTo"] as? Privacy ?? .contacts,
             showPhoneNumberTo: userInfo["showPhoneNumberTo"] as? Privacy ?? .contacts,
-            password: userInfo["password"] as? String ?? ""
+            password: userInfo["password"] as? String ?? "",
+            channels: userInfo["channels"] as? [String] ?? []
         )
         return profile
     }
@@ -74,6 +75,7 @@ final class KeyChainStorage {
         userInfo["showEmailTo"] = profile.showEmailTo.rawValue
         userInfo["showPhoneNumberTo"] = profile.showPhoneNumberTo.rawValue
         userInfo["password"] = profile.password
+        userInfo["channels"] = profile.channels
         
         userDefaults.setValue(userInfo, forKey: Key.userProfile)
     }

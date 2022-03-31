@@ -21,6 +21,7 @@ struct ProfileModel: Decodable {
     let showEmailTo: Privacy
     let showPhoneNumberTo: Privacy
     var password: String?
+    var channels: [String]?
     
     func asContactModel() -> ContactModel {
         let contactModel = ContactModel(id: id, userArn: userArn, firstName: firstName, lastName: lastName, username: username, email: email, phoneNumber: phoneNumber, image: image, about: about, online: true, favorite: false, muted: false, inMyContacts: false)

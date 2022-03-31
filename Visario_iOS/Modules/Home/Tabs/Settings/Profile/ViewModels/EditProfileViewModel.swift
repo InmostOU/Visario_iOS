@@ -60,10 +60,10 @@ final class EditProfileViewModel {
         print("actual size of image in KB: %f ", Double(pngData.count) / 1024)
         
         contactsService.uploadUserPhoto(data: pngData, description: "useravatar") { [weak self] result in
-            switch result { 
+            switch result {
             case .success(let response):
                 print(response)
-               
+                
                 self?.contactsService.getProfile { res in
                     switch res {
                     case .success(let newProfile):
