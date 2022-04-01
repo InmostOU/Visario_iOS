@@ -47,6 +47,10 @@
 	<string>c2af62dbc9a86e5c96c302f793a1e941</string>
 	<key>FacebookDisplayName</key>
 	<string>TEST_Facebook_Authorization</string>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+	<false/>
+	<key>FacebookAdvertiserIDCollectionEnabled</key>
+	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
