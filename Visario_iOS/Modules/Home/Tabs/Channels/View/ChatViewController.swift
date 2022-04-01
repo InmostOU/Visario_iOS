@@ -215,7 +215,7 @@ class ChatViewController: MessagesViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        channelsViewModel.removeNewMessagesFromChannel(by: channelArn)
+        channelsViewModel.removeBadgeCounterFromChannel(by: channelArn)
         ConnectivityManager.shared.addListener(listener: self)
         DispatchQueue.main.async {
             self.messagesCollectionView.scrollToLastItem(at: .top, animated: false)

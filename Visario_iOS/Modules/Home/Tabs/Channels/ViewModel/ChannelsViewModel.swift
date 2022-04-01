@@ -445,7 +445,7 @@ final class ChannelsViewModel {
         filesService.writeToPhotoAlbum(image: image)
     }
     
-    func removeNewMessagesFromChannel(by channelArn: String) {
+    func removeBadgeCounterFromChannel(by channelArn: String) {
         guard let channelIndex = channels.firstIndex(where: { $0.channelArn == channelArn }) else { return }
         channels[channelIndex].newMessages.removeAll()
     }

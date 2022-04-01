@@ -56,7 +56,6 @@ final class ChannelsListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //view.showRotationHUD()
         setupSearchController()
         setupNavigationBar()
         setupTableView()
