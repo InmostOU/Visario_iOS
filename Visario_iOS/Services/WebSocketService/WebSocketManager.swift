@@ -36,7 +36,14 @@ final class WebSocketManager {
                         let amazonMessageModel = try JSONDecoder().decode(AmazonMessage.self, from: data)
                         callback(.success(amazonMessageModel))
                     } catch {
-                        callback(.failure(error))
+                        do {
+                            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                            let jsonStr = json?["Headers"] as? [String:String]
+                            let message = jsonStr?["x-amz-chime-event-type"] ?? "No data"
+                            print("WebSocket:", message)
+                        } catch {
+                            callback(.failure(error))
+                        }
                     }
                 case .data(let data):
                     print("Received data: \(data)")
