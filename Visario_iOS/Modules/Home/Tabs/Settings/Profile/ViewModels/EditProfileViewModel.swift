@@ -40,7 +40,7 @@ final class EditProfileViewModel {
             case .success:
                 completion(.success(()))
                 
-                let updatedProfileModel = ProfileModel(id: self.profile.id, userArn: self.profile.userArn, firstName: self.updatedProfile.firstName, lastName: self.updatedProfile.lastName, username: self.updatedProfile.username, birthday: self.updatedProfile.birthday, email: self.profile.email, phoneNumber: self.profile.phoneNumber, image: self.profile.image, about: self.updatedProfile.about, showEmailTo: self.updatedProfile.showEmailTo, showPhoneNumberTo: self.updatedProfile.showPhoneNumberTo)
+                let updatedProfileModel = ProfileModel(id: self.profile.id, userArn: self.profile.userArn, firstName: self.updatedProfile.firstName, lastName: self.updatedProfile.lastName, username: self.updatedProfile.username, birthday: self.updatedProfile.birthday, email: self.profile.email, phoneNumber: self.profile.phoneNumber, image: self.profile.image, about: self.updatedProfile.about, showEmailTo: self.updatedProfile.showEmailTo, showPhoneNumberTo: self.updatedProfile.showPhoneNumberTo, channels: self.profile.channels)
                 
                 KeyChainStorage.shared.saveProfile(profile: updatedProfileModel)
                 

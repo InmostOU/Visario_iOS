@@ -87,12 +87,18 @@ final class AuthenticationService {
                 }
                 do {
                     let result = try JSONDecoder().decode(AuthDataModel.self, from: response.data)
-                    guard let userProfile = result.userProfile else {
+                    guard var userProfile = result.userProfile else {
                         callback(.failure(NetworkError.errorDecode))
                         return }
                     guard let token = result.accessToken else {
                         callback(.failure(NetworkError.errorDecode))
-                        return }
+                        return
+                    }
+                    if let savedProfile = KeyChainStorage.shared.getProfile(),
+                       savedProfile.email == userProfile.email {
+                        userProfile.channels = savedProfile.channels
+                    }
+                    
                     KeyChainStorage.shared.saveProfile(profile: userProfile)
                     KeyChainStorage.shared.saveAccessToken(token: token)
                     callback(.success(()))
@@ -116,12 +122,17 @@ final class AuthenticationService {
                 }
                 do {
                     let result = try JSONDecoder().decode(AuthDataModel.self, from: response.data)
-                    guard let userProfile = result.userProfile else {
+                    guard var userProfile = result.userProfile else {
                         callback(.failure(NetworkError.errorDecode))
                         return }
                     guard let token = result.accessToken else {
                         callback(.failure(NetworkError.errorDecode))
-                        return }
+                        return
+                    }
+                    if let savedProfile = KeyChainStorage.shared.getProfile(),
+                       savedProfile.email == userProfile.email {
+                        userProfile.channels = savedProfile.channels
+                    }
                     KeyChainStorage.shared.saveProfile(profile: userProfile)
                     KeyChainStorage.shared.saveAccessToken(token: token)
                     callback(.success(()))
