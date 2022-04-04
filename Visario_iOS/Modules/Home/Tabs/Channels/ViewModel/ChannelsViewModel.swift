@@ -113,6 +113,12 @@ final class ChannelsViewModel {
         KeyChainStorage.shared.saveProfile(profile: profile)
     }
     
+    private func removeChannelArnFromLocalProfile(channelArn: String) {
+        guard var profile = KeyChainStorage.shared.getProfile() else { return }
+        profile.channels?.removeAll(where: { $0 == channelArn })
+        KeyChainStorage.shared.saveProfile(profile: profile)
+    }
+    
     private func addMessagesToChannels(channels: [ChannelModel], callback: @escaping (Result<[ChannelWithMessagesModel], Error>) -> Void) {
         var newChannels: [ChannelWithMessagesModel] = channelsConverter.channelsWithMessages(from: channels)
         let group = DispatchGroup()
@@ -151,8 +157,10 @@ final class ChannelsViewModel {
             switch response {
             case .success(let void):
                 self.channels.removeAll { $0.channelArn == channelArn }
-                self.coreDataService.deleteChannel(by: channelArn) { }
-                callback(.success(void))
+                self.coreDataService.deleteChannel(by: channelArn) {
+                    self.removeChannelArnFromLocalProfile(channelArn: channelArn)
+                    callback(.success(void))
+                }
             case .failure(let error):
                 callback(.failure(error))
             }
