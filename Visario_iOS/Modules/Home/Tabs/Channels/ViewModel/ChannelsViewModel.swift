@@ -90,7 +90,7 @@ final class ChannelsViewModel {
             guard let self = self else { return }
             switch response {
             case .success(let serverChannels):
-                self.addChannelsToProfile(channels: serverChannels)
+                self.saveChannelsToProfile(channels: serverChannels)
                 self.addMessagesToChannels(channels: serverChannels) { response in
                     switch response {
                     case .success(let channelsWithMessages):
@@ -107,7 +107,7 @@ final class ChannelsViewModel {
         }
     }
     
-    private func addChannelsToProfile(channels: [ChannelModel]) {
+    private func saveChannelsToProfile(channels: [ChannelModel]) {
         guard var profile = KeyChainStorage.shared.getProfile() else { return }
         profile.channels = channels.map(\.channelArn)
         KeyChainStorage.shared.saveProfile(profile: profile)
