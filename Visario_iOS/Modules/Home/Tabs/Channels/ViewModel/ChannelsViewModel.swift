@@ -85,29 +85,31 @@ final class ChannelsViewModel {
     }
     
     private func getChannelsFromServer(callback: @escaping VoidCallback) {
-        // get channels from server
         channelsAPIService.getAllChannels { [weak self] response in
             guard let self = self else { return }
             switch response {
             case .success(let serverChannels):
-                self.saveChannelsToProfile(channels: serverChannels)
-                self.addMessagesToChannels(channels: serverChannels) { response in
-                    switch response {
-                    case .success(let channelsWithMessages):
-                        self.updateChannels(fetchedChannels: channelsWithMessages) {
-                            callback(.success(()))
-                        }
-                    case .failure(let error):
-                        print(error)
-                    }
-                }
+                self.saveChannels(channels: serverChannels, callback: callback)
             case .failure(let error):
                 callback(.failure(error))
             }
         }
     }
     
-    private func saveChannelsToProfile(channels: [ChannelModel]) {
+    private func saveChannels(channels: [ChannelModel], callback: @escaping VoidCallback) {
+        self.addMessagesToChannels(channels: channels) { response in
+            switch response {
+            case .success(let channelsWithMessages):
+                self.updateChannels(fetchedChannels: channelsWithMessages) {
+                    callback(.success(()))
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    private func saveChannelsToProfile(channels: [ChannelWithMessagesModel]) {
         guard var profile = KeyChainStorage.shared.getProfile() else { return }
         profile.channels = channels.map(\.channelArn)
         KeyChainStorage.shared.saveProfile(profile: profile)
@@ -145,6 +147,7 @@ final class ChannelsViewModel {
     
     private func updateChannels(fetchedChannels: [ChannelWithMessagesModel], callback: @escaping () -> Void) {
         channels = fetchedChannels
+        saveChannelsToProfile(channels: fetchedChannels)
         coreDataService.saveChannels(channels: fetchedChannels, callback: callback)
     }
     
