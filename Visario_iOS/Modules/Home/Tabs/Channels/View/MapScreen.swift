@@ -7,7 +7,6 @@
 
 import MapKit
 import CoreLocation
-import MapKit
 
 protocol MapsDelegate: AnyObject {
     /**
@@ -33,6 +32,21 @@ final class MapScreen: UIViewController {
     private var regionInMeters: Double = 10_000
     private var selectedLocation: CLLocationCoordinate2D?
     private var searchQuery = ""
+    
+    var zoomLevel: Double {
+        var angleCamera = mapView.camera.heading
+        if angleCamera > 270 {
+            angleCamera = 360 - angleCamera
+        } else if angleCamera > 90 {
+            angleCamera = fabs(angleCamera - 180)
+        }
+        let angleRad = Double.pi * angleCamera / 180
+        let width = Double(self.view.frame.size.width)
+        let height = Double(self.view.frame.size.height)
+        let heightOffset = 20.0
+        let spanStraight = width * mapView.region.span.longitudeDelta / (width * cos(angleRad) + (height - heightOffset) * sin(angleRad))
+        return log2(360 * ((width / 256) / spanStraight)) + 1
+    }
     
     // MARK: - UI Elements
     
@@ -486,19 +500,18 @@ extension MapScreen: CLLocationManagerDelegate {
     }
     
     private func mapZoomIn() {
-        let divider = 0.5
-        let latDelta = mapView.region.span.latitudeDelta * divider
-        let lonDelta = mapView.region.span.longitudeDelta * divider
-        let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+        var span = MKCoordinateSpan()
+        span.latitudeDelta = mapView.region.span.latitudeDelta / 2
+        span.longitudeDelta = mapView.region.span.longitudeDelta / 2
         let region = MKCoordinateRegion(center: mapView.region.center, span: span)
         mapView.setRegion(region, animated: true)
     }
     
     private func mapZoomOut() {
-        let divider = 0.5
-        let latDelta = mapView.region.span.latitudeDelta / divider
-        let lonDelta = mapView.region.span.longitudeDelta / divider
-        let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+        guard zoomLevel > 4 else { return }
+        var span = MKCoordinateSpan()
+        span.latitudeDelta = mapView.region.span.latitudeDelta * 2
+        span.longitudeDelta = mapView.region.span.longitudeDelta * 2
         let region = MKCoordinateRegion(center: mapView.region.center, span: span)
         mapView.setRegion(region, animated: true)
     }
