@@ -7,6 +7,7 @@
 
 import MapKit
 import CoreLocation
+import MapKit
 
 protocol MapsDelegate: AnyObject {
     /**
@@ -29,7 +30,7 @@ final class MapScreen: UIViewController {
     private let mapControlButtonWidth: CGFloat = 50
     private let backButtonWidth: CGFloat = 40
     private let defaultInset: CGFloat = 16
-    private var regionInMeters = 10_000.0
+    private var regionInMeters: Double = 10_000
     private var selectedLocation: CLLocationCoordinate2D?
     private var searchQuery = ""
     
@@ -289,7 +290,7 @@ final class MapScreen: UIViewController {
         if CLLocationManager.locationServicesEnabled() {
             checkLocationAuthorization()
         } else {
-            // Show alert letting the user know they have to tern this on.
+            // Show alert letting the user know they have to turn this on.
         }
     }
     
@@ -370,17 +371,17 @@ final class MapScreen: UIViewController {
     }
     
     private func showHideSearchField() {
-        UIView.animate(withDuration: 0.2) {
-            self.searchStackView.snp.updateConstraints {
-                if self.searchStackView.frame.width == 0 {
-                    let width = UIScreen.main.bounds.width - (self.backButtonWidth + self.defaultInset * 3)
-                    $0.width.equalTo(width)
-                    self.searchTextField.becomeFirstResponder()
-                } else {
-                    self.searchTextField.resignFirstResponder()
-                    $0.width.equalTo(0)
-                }
+        self.searchStackView.snp.updateConstraints {
+            if self.searchStackView.frame.width == 0 {
+                let width = UIScreen.main.bounds.width - (self.backButtonWidth + self.defaultInset * 3)
+                $0.width.equalTo(width)
+                self.searchTextField.becomeFirstResponder()
+            } else {
+                $0.width.equalTo(0)
+                self.searchTextField.resignFirstResponder()
             }
+        }
+        UIView.animate(withDuration: 0.2) {
             self.view.layoutIfNeeded()
         }
     }
@@ -485,11 +486,21 @@ extension MapScreen: CLLocationManagerDelegate {
     }
     
     private func mapZoomIn() {
-        
+        let divider = 0.5
+        let latDelta = mapView.region.span.latitudeDelta * divider
+        let lonDelta = mapView.region.span.longitudeDelta * divider
+        let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+        let region = MKCoordinateRegion(center: mapView.region.center, span: span)
+        mapView.setRegion(region, animated: true)
     }
     
     private func mapZoomOut() {
-        
+        let divider = 0.5
+        let latDelta = mapView.region.span.latitudeDelta / divider
+        let lonDelta = mapView.region.span.longitudeDelta / divider
+        let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+        let region = MKCoordinateRegion(center: mapView.region.center, span: span)
+        mapView.setRegion(region, animated: true)
     }
     
     private func chevronButtonTapped() {
