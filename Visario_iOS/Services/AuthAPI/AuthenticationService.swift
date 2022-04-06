@@ -59,9 +59,6 @@ final class AuthenticationService {
                         callback(.failure(NetworkError.errorDecode))
                         return
                     }
-                    if let savedProfile = KeyChainStorage.shared.getProfile(), savedProfile.email == email {
-                        userProfile.channels = savedProfile.channels
-                    }
                     userProfile.password = password
                     KeyChainStorage.shared.saveProfile(profile: userProfile)
                     KeyChainStorage.shared.saveAccessToken(token: token)
