@@ -25,8 +25,12 @@ class ContactsListTableViewController: UITableViewController {
         setupNavigationBar()
         setupTableView()
         getAllContacts()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
-        view.showRotationHUD()
+        view.hideHUD()
     }
     
     private func setBackgroundView() {
@@ -40,6 +44,7 @@ class ContactsListTableViewController: UITableViewController {
     }
     
     func getAllContacts() {
+        view.showRotationHUD()
         contactsViewModel.getAllContacts { [weak self] response in
             guard let self = self else { return }
             self.setBackgroundView()
