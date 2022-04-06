@@ -106,7 +106,7 @@ final class ChannelTableViewCell: UITableViewCell {
     func fill(with channel: ChannelWithMessagesModel) {
         channelNameLabel.text = channel.name
         subtitleLabel.text = channel.privacy.rawValue.lowercased()
-        setupNewMessagesBadge(with: channel.newMessages.count)
+        setupNewMessagesBadge(with: channel.messagesForBadge.count)
         
         guard let lastSendedMessage = channel.messages.last else { return }
         let sendedTime = lastSendedMessage.sentDate.timeIntervalSince1970 / 1000

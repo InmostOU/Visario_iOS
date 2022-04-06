@@ -67,7 +67,6 @@ final class ChannelsListTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        channelsViewModel.isChannelsListInFocus = true
         ConnectivityManager.shared.addListener(listener: self)
         tableView.reloadData()
     }
@@ -76,7 +75,6 @@ final class ChannelsListTableViewController: UITableViewController {
         super.viewDidDisappear(animated)
         
         view.hideHUD()
-        channelsViewModel.isChannelsListInFocus = false
         ConnectivityManager.shared.removeListener(listener: self)
     }
     

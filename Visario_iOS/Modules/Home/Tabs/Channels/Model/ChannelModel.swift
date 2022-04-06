@@ -62,7 +62,7 @@ struct ChannelWithMessagesModel: ChannelModelInterface {
     var isAdmin: Bool?
     var description: String?
     var messages: [KitMessage]
-    var newMessages: [KitMessage]
+    var messagesForBadge: [KitMessage]
 }
 
 // MARK: - Equatable

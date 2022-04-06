@@ -27,7 +27,7 @@ final class ChannelsConverter {
                 isAdmin: channelModel.isAdmin,
                 description: channelModel.description,
                 messages: [],
-                newMessages: []
+                messagesForBadge: []
             )
             resultChannels.append(newChannelWithMessagesModel)
         }
@@ -70,7 +70,7 @@ final class ChannelsConverter {
                                                                   isAdmin: channel.isAdmin,
                                                                   description: channel.channelDescription,
                                                                   messages: messagesConverter.kitMessages(from: messages),
-                                                                  newMessages: [])
+                                                                  messagesForBadge: [])
             channelsWithMessages.append(newChannelWithMessages)
         }
         

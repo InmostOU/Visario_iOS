@@ -33,7 +33,6 @@ final class ChannelsViewModel {
     private(set) var chatBotMessages: [KitMessage] = []
     
     var newChannel = ChannelModel.placeholder
-    var isChannelsListInFocus = false
     
     weak var view: (BaseView & UIViewController)?
     
@@ -288,9 +287,7 @@ final class ChannelsViewModel {
         } else {
             channels[channelIndex].messages.append(kitMessage)
             coreDataService.saveMessage(kitMessage) {
-                if self.isChannelsListInFocus {
-                    self.channels[channelIndex].newMessages.append(kitMessage)
-                }
+                self.channels[channelIndex].messagesForBadge.append(kitMessage)
                 callback()
             }
         }
@@ -458,7 +455,7 @@ final class ChannelsViewModel {
     
     func removeBadgeCounterFromChannel(by channelArn: String) {
         guard let channelIndex = channels.firstIndex(where: { $0.channelArn == channelArn }) else { return }
-        channels[channelIndex].newMessages.removeAll()
+        channels[channelIndex].messagesForBadge.removeAll()
     }
 }
 
