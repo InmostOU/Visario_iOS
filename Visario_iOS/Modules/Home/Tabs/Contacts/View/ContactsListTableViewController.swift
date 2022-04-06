@@ -14,6 +14,14 @@ class ContactsListTableViewController: UITableViewController {
     private let contactsViewModel = ContactsViewModel()
     private let usersActivityService = StompClient.shared
     
+    // MARK: - UI Elements
+    
+    private lazy var contactsRefreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshContacts), for: .valueChanged)
+        return refreshControl
+    }()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -43,14 +51,19 @@ class ContactsListTableViewController: UITableViewController {
         }
     }
     
-    func getAllContacts() {
+    private func getAllContacts() {
         view.showRotationHUD()
+        fetchAllContacts()
+    }
+    
+    func fetchAllContacts() {
         contactsViewModel.getAllContacts { [weak self] response in
             guard let self = self else { return }
             self.setBackgroundView()
             switch response {
             case .success(_):
                 self.view.hideHUD()
+                self.contactsRefreshControl.endRefreshing()
                 self.tableView.reloadData()
                 self.getContactsActivityStatus()
             case .failure(let error):
@@ -85,13 +98,8 @@ class ContactsListTableViewController: UITableViewController {
     private func setupTableView() {
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.register(ContactTableViewCell.self, forCellReuseIdentifier: ContactTableViewCell.identifier)
+        tableView.refreshControl = contactsRefreshControl
         tableView.tableFooterView = UIView()
-    }
-    
-    @objc private func addUserButtonTapped(_ sender: UIBarButtonItem) {
-        let addContactsViewController = AddContactsTableViewController(model: contactsViewModel, delegate: self)
-        contactsViewModel.removeAllSearchedContacts()
-        navigationController?.pushViewController(addContactsViewController, animated: true)
     }
     
     private func deleteContact(by indexPath: IndexPath) {
@@ -107,6 +115,16 @@ class ContactsListTableViewController: UITableViewController {
             }
         }
         tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
+    
+    @objc private func addUserButtonTapped(_ sender: UIBarButtonItem) {
+        let addContactsViewController = AddContactsTableViewController(model: contactsViewModel, delegate: self)
+        contactsViewModel.removeAllSearchedContacts()
+        navigationController?.pushViewController(addContactsViewController, animated: true)
+    }
+    
+    @objc private func refreshContacts() {
+        fetchAllContacts()
     }
 }
 

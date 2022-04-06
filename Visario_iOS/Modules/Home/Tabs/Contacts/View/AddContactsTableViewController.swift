@@ -161,7 +161,7 @@ extension AddContactsTableViewController: AddContactCellDelegate {
             case .success(_):
                 self.tableView.reloadData()
                 self.view.showSuccessHUD()
-                self.delegate?.getAllContacts()
+                self.delegate?.fetchAllContacts()
             case .failure(let error):
                 self.view.showFailedHUD()
                 print(error)
