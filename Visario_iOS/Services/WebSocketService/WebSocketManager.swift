@@ -44,6 +44,7 @@ final class WebSocketManager {
                         } catch {
                             callback(.failure(error))
                         }
+                        callback(.failure(error))
                     }
                 case .data(let data):
                     print("Received data: \(data)")

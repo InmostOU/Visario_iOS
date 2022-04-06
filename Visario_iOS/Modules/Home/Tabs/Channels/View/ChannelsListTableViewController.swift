@@ -88,7 +88,7 @@ final class ChannelsListTableViewController: UITableViewController {
                 WebSocketManager.shared.setupWebSocket(with: webSocketModel.message)
                 self.connectToWebSocket()
             case .failure(let error):
-                print(error.localizedDescription)
+                print("WebSocket:", error.localizedDescription)
             }
         }
     }
@@ -105,7 +105,7 @@ final class ChannelsListTableViewController: UITableViewController {
                     }
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                print("WebSocket:", error.localizedDescription)
             }
             self.connectToWebSocket()
         }
