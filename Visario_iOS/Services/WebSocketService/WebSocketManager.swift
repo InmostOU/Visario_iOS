@@ -51,8 +51,24 @@ final class WebSocketManager {
                 @unknown default:
                     debugPrint("Unknown message")
                 }
+                self.connectToWebSocket(callback: callback)
             }
         }
+    }
+    
+    func disconnect() {
+        webSocketTask?.cancel(with: .goingAway, reason: nil)
+    }
+    
+    func ping() {
+      webSocketTask?.sendPing { (error) in
+        if let error = error {
+          print("Sending PING failed: \(error)")
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+          self.ping()
+        }
+      }
     }
     
     private func validJSONString(from text: String) -> String {

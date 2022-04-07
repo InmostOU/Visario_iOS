@@ -60,6 +60,7 @@ final class ChannelsListTableViewController: UITableViewController {
         setupNavigationBar()
         setupTableView()
         setupWebSocket()
+        setupObservers()
         getData()
         getCtatBotMessages()
     }
@@ -94,6 +95,7 @@ final class ChannelsListTableViewController: UITableViewController {
     private func connectToWebSocket() {
         WebSocketManager.shared.connectToWebSocket { [weak self] amazonMessageModel in
             guard let self = self else { return }
+            WebSocketManager.shared.ping()
             switch amazonMessageModel {
             case .success(let message):
                 self.channelsViewModel.updateMessage(message: message) {
@@ -105,7 +107,20 @@ final class ChannelsListTableViewController: UITableViewController {
             case .failure(let error):
                 print("WebSocket:", error.localizedDescription)
             }
-            self.connectToWebSocket()
+        }
+    }
+    
+    private func setupObservers() {
+        suspendAppStateCompletion = { _ in
+            self.setupWebSocket()
+//            WebSocketManager.shared.setupWebSocket(with: self.webSocketURL)
+//            self.connectToWebSocket()
+//            switch appState {
+//            case .foreground:
+//                WebSocketManager.shared.ping()
+//            case .background:
+//                self?.connectToWebSocket()
+//            }
         }
     }
     
