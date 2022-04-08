@@ -95,7 +95,6 @@ final class ChannelsListTableViewController: UITableViewController {
     private func connectToWebSocket() {
         WebSocketManager.shared.connectToWebSocket { [weak self] amazonMessageModel in
             guard let self = self else { return }
-            WebSocketManager.shared.ping()
             switch amazonMessageModel {
             case .success(let message):
                 self.channelsViewModel.updateMessage(message: message) {
@@ -111,16 +110,15 @@ final class ChannelsListTableViewController: UITableViewController {
     }
     
     private func setupObservers() {
-        suspendAppStateCompletion = { _ in
-            self.setupWebSocket()
-//            WebSocketManager.shared.setupWebSocket(with: self.webSocketURL)
-//            self.connectToWebSocket()
-//            switch appState {
-//            case .foreground:
-//                WebSocketManager.shared.ping()
-//            case .background:
-//                self?.connectToWebSocket()
-//            }
+        suspendAppStateCompletion = { [weak self] appState in
+            guard let self = self else { return }
+            switch appState {
+            case .foreground:
+                self.setupWebSocket()
+                self.getData()
+            case .background:
+                break
+            }
         }
     }
     
@@ -138,6 +136,7 @@ final class ChannelsListTableViewController: UITableViewController {
                 case .success:
                     self.view.hideHUD()
                     self.tableView.reloadData()
+                    self.websocketCompletion()
                 case .failure:
                     self.view.showFailedHUD()
                 }

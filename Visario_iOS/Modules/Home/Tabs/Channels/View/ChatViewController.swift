@@ -540,7 +540,7 @@ class ChatViewController: MessagesViewController {
     }
     
     private func stopAudioRecording() {
-        stopSopWatchTimer()
+        stopStopWatchTimer()
         audioRecorder.finishRecording()
         messageInputBar.setRightStackViewWidthConstant(to: 110, animated: false)
         messageInputBar.setStackViewItems([sendBarButton, delAudioBarButton, playBarButton], forStack: .right, animated: false)
@@ -550,7 +550,7 @@ class ChatViewController: MessagesViewController {
         stopWatchTimer = .scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateStopWatch), userInfo: nil, repeats: true)
     }
     
-    private func stopSopWatchTimer() {
+    private func stopStopWatchTimer() {
         stopWatchTimer.invalidate()
     }
     
@@ -686,7 +686,7 @@ class ChatViewController: MessagesViewController {
         }
         if minutes > 9 {
             stopAudioRecording()
-            stopSopWatchTimer()
+            stopStopWatchTimer()
         }
         timerLabel.text = String(format: "%01i:%02i.%02i", minutes, seconds, milliseconds)
     }
