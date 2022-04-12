@@ -62,7 +62,7 @@ struct KitMessage: MessageType {
             return .photo(Media(url: nil, image: image, placeholderImage: placeholder, size: photoFrameSize))
         } else if let url = imageURL {
             return .photo(Media(url: URL(string: url), image: nil, placeholderImage: placeholder, size: photoFrameSize))
-        } else if var url = fileURL, url.isTextFileType() {
+        } else if var url = fileURL, url.isTextFileType {
             var fileName = ""
             
             if file != nil {
@@ -81,7 +81,7 @@ struct KitMessage: MessageType {
             
             let linkItem = FileLinkItem(text: "Attachment", url: URL(string: url)!, title: fileName, teaser: String(fileSize) + " Bytes", thumbnailImage: image)
             return .linkPreview(linkItem)
-        } else if let url = fileURL, url.isAudioFileType() {
+        } else if let url = fileURL, url.isAudioFileType {
             guard let url = URL(string: url) else { return .text("Error") }
             let size = CGSize(width: 200, height: 50)
             let audioItem = AudioFileItem(url: url, size: size, duration: audioDuration ?? 0)

@@ -112,8 +112,8 @@ final class ForgotPasswordViewController: UIViewController {
     
     private func checkSendButtonEnabling(by textField: UITextField) {
         guard let text = textField.text else { return }
-        sendButton.isEnabled = text.isValidEmail()
-        sendButton.backgroundColor = text.isValidEmail() ? .systemBlue : .gray
+        sendButton.isEnabled = text.isValidEmail
+        sendButton.backgroundColor = text.isValidEmail ? .systemBlue : .gray
     }
 }
 
@@ -170,7 +170,7 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
         guard let floatingTextField = textField as? SkyFloatingLabelTextField else { return }
         checkSendButtonEnabling(by: floatingTextField)
         
-        floatingTextField.errorMessage = text.isValidEmail() ? nil : "Invalid email"
+        floatingTextField.errorMessage = text.isValidEmail ? nil : "Invalid email"
         
         if text.isEmpty {
             floatingTextField.errorMessage = nil

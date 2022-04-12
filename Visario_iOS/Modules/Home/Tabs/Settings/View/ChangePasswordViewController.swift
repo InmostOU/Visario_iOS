@@ -174,7 +174,7 @@ final class ChangePasswordViewController: UIViewController {
     
     private func isValid(_ textField: UITextField) -> Bool {
         guard let text = textField.text, !text.isEmpty else { return false }
-        return text.isValidPassword()
+        return text.isValidPassword
     }
     
     @objc func adjustForKeyboard(notification: Notification) {
@@ -244,7 +244,7 @@ final class ChangePasswordViewController: UIViewController {
         checkSaveButtonEnabling()
         
         if !text.isEmpty {
-            if text.isValidPassword() {
+            if text.isValidPassword {
                 floatingTextField.errorMessage = ""
             } else {
                 floatingTextField.errorMessage = "Invalid password"

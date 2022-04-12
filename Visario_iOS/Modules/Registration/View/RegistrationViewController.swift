@@ -368,15 +368,15 @@ final class RegistrationViewController: UIViewController {
         
         switch textField.tag {
         case FieldTag.userName.index:
-            return text.isValidUserName()
+            return text.isValidUserName
         case FieldTag.email.index:
-            return text.isValidEmail()
+            return text.isValidEmail
         case FieldTag.firstName.index, FieldTag.lastName.index:
-            return text.isValidLastFirstName()
+            return text.isValidLastFirstName
         case FieldTag.birthDate.index:
             return true
         case FieldTag.password.index, FieldTag.confirmPassword.index:
-            return text.isValidPassword()
+            return text.isValidPassword
         default:
             return false
         }
