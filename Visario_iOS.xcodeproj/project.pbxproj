@@ -59,6 +59,7 @@
 		FE19EECE26D65C7D0005894F /* AddMemberToChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE19EECD26D65C7D0005894F /* AddMemberToChannelTableViewCell.swift */; };
 		FE23871127201EAB001001FA /* ChatBotRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE23871027201EAB001001FA /* ChatBotRoomViewController.swift */; };
 		FE2387162720598D001001FA /* UTType+word.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2387152720598D001001FA /* UTType+word.swift */; };
+		FE29EBD32806D5F1007304A3 /* VisarioTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE29EBD22806D5F1007304A3 /* VisarioTextField.swift */; };
 		FE321A2726F0D6B70050D157 /* MessagesConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE321A2626F0D6B70050D157 /* MessagesConverter.swift */; };
 		FE35AD9426B9C13A006EDFEC /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE35AD9326B9C13A006EDFEC /* AuthAPI.swift */; };
 		FE35AD9726B9C1A0006EDFEC /* AuthDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE35AD9626B9C1A0006EDFEC /* AuthDataModel.swift */; };
@@ -243,6 +244,7 @@
 		FE19EECD26D65C7D0005894F /* AddMemberToChannelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberToChannelTableViewCell.swift; sourceTree = "<group>"; };
 		FE23871027201EAB001001FA /* ChatBotRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotRoomViewController.swift; sourceTree = "<group>"; };
 		FE2387152720598D001001FA /* UTType+word.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UTType+word.swift"; sourceTree = "<group>"; };
+		FE29EBD22806D5F1007304A3 /* VisarioTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisarioTextField.swift; sourceTree = "<group>"; };
 		FE321A2626F0D6B70050D157 /* MessagesConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesConverter.swift; sourceTree = "<group>"; };
 		FE35AD9326B9C13A006EDFEC /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
 		FE35AD9626B9C1A0006EDFEC /* AuthDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthDataModel.swift; sourceTree = "<group>"; };
@@ -532,6 +534,7 @@
 		FE031A6926B979EB004F8167 /* Visario_iOS */ = {
 			isa = PBXGroup;
 			children = (
+				FE29EBD12806D582007304A3 /* CustomUIComponents */,
 				869B889C26BD2D3E00DB80FC /* Constants */,
 				FE31CB3A26B9A9D9009AFA27 /* Extensions */,
 				FE31CB3B26B9A9E1009AFA27 /* Modules */,
@@ -550,6 +553,14 @@
 				FE2387152720598D001001FA /* UTType+word.swift */,
 			);
 			path = UTType;
+			sourceTree = "<group>";
+		};
+		FE29EBD12806D582007304A3 /* CustomUIComponents */ = {
+			isa = PBXGroup;
+			children = (
+				FE29EBD22806D5F1007304A3 /* VisarioTextField.swift */,
+			);
+			path = CustomUIComponents;
 			sourceTree = "<group>";
 		};
 		FE31CB3926B9A9D2009AFA27 /* Supporting files */ = {
@@ -1239,6 +1250,7 @@
 				FEE1BDE426BC4543002C707C /* KeyChainStorage.swift in Sources */,
 				86CA16B026C52BE300E411BF /* SettingTableViewCell.swift in Sources */,
 				FEB614DB26C6529700FAFCF5 /* ServerMessage.swift in Sources */,
+				FE29EBD32806D5F1007304A3 /* VisarioTextField.swift in Sources */,
 				FEBE785326F86859006B8A2C /* PrivateChatViewController.swift in Sources */,
 				861037D126DD165300AD6BDB /* MeetingResponseModel.swift in Sources */,
 				FE12AD2726D545A80068F514 /* ChannelDescriptionTableViewCell.swift in Sources */,

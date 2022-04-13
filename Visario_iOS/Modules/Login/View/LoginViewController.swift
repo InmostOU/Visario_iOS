@@ -31,15 +31,21 @@ final class LoginViewController: UIViewController {
         return welcomeLabel
     }()
     
-    private lazy var mailTextField: UITextField = {
-        let mailTextField = UITextField()
+    private lazy var mailTextField: VisarioTextField = {
+        let mailTextField = VisarioTextField(isSecure: false)
         mailTextField.placeholder = "Email"
-        mailTextField.borderStyle = .roundedRect
         mailTextField.delegate = self
         return mailTextField
     }()
     
-    private lazy var passwordTextField: UITextField = {
+    private lazy var passwordTextField: VisarioTextField = {
+        let passwordTextField = VisarioTextField(isSecure: true)
+        passwordTextField.placeholder = "Password"
+        passwordTextField.delegate = self
+        return passwordTextField
+    }()
+    
+    private lazy var passwordTextField1: UITextField = {
         let passwordTextField = UITextField()
         passwordTextField.isSecureTextEntry = true
         passwordTextField.placeholder = "Password"
@@ -312,14 +318,15 @@ final class LoginViewController: UIViewController {
     }
     
     private func checkLoginButtonEnabling() {
-        guard !(mailTextField.text?.isEmpty ?? false),
-              !(passwordTextField.text?.isEmpty ?? false)
+        guard let password = passwordTextField.text,
+              let email = mailTextField.text,
+              !email.isEmpty,
+              !password.isEmpty
         else {
             loginButton.isEnabled = false
             loginButton.backgroundColor = .gray
             return
         }
-        
         loginButton.isEnabled = true
         loginButton.backgroundColor = .purple
     }
