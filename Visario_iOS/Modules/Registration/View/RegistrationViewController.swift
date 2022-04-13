@@ -84,107 +84,58 @@ final class RegistrationViewController: UIViewController {
         return label
     }()
     
-    private lazy var usernameTextField: UITextField = {
-        let textField = UITextField()
-        textField.innerPaddings(left: 15, right: 15)
+    private lazy var usernameTextField: VisarioTextField = {
+        let textField = VisarioTextField()
         textField.placeholder = "Username"
-        textField.layer.cornerRadius = 5
-        textField.layer.masksToBounds = true
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.gray.cgColor
         textField.delegate = self
         textField.tag = FieldTag.userName.index
         return textField
     }()
     
-    private lazy var emailTextField: UITextField = {
-        let textField = UITextField()
-        textField.innerPaddings(left: 15, right: 15)
+    private lazy var emailTextField: VisarioTextField = {
+        let textField = VisarioTextField()
         textField.placeholder = "Email"
-        textField.layer.cornerRadius = 5
-        textField.layer.masksToBounds = true
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.gray.cgColor
         textField.delegate = self
         textField.tag = FieldTag.email.index
         return textField
     }()
     
-    private lazy var firstNameTextField: UITextField = {
-        let textField = UITextField()
-        textField.innerPaddings(left: 15, right: 15)
+    private lazy var firstNameTextField: VisarioTextField = {
+        let textField = VisarioTextField()
         textField.placeholder = "First name"
-        textField.layer.cornerRadius = 5
-        textField.layer.masksToBounds = true
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.gray.cgColor
         textField.delegate = self
         textField.tag = FieldTag.firstName.index
         return textField
     }()
     
-    private lazy var lastNameTextField: UITextField = {
-        let textField = UITextField()
-        textField.innerPaddings(left: 15, right: 15)
+    private lazy var lastNameTextField: VisarioTextField = {
+        let textField = VisarioTextField()
         textField.placeholder = "Last name"
-        textField.layer.cornerRadius = 5
-        textField.layer.masksToBounds = true
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.gray.cgColor
         textField.delegate = self
         textField.tag = FieldTag.lastName.index
         return textField
     }()
     
-    private lazy var dateOfBirthTextField: UITextField = {
-        let textField = UITextField()
-        textField.innerPaddings(left: 15, right: 15)
-        textField.tintColor = .clear
+    private lazy var dateOfBirthTextField: VisarioTextField = {
+        let textField = VisarioTextField()
         textField.placeholder = "Date of birth (Optional)"
-        textField.layer.cornerRadius = 5
-        textField.layer.masksToBounds = true
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.gray.cgColor
+        textField.tintColor = .clear
         textField.delegate = self
         textField.tag = FieldTag.birthDate.index
         return textField
     }()
     
-    private lazy var passwordTextField: UITextField = {
-        let textField = UITextField()
-        textField.innerPaddings(left: 15, right: 15)
-        textField.isSecureTextEntry = true
+    private lazy var passwordTextField: VisarioTextField = {
+        let textField = VisarioTextField(isSecure: true)
         textField.placeholder = "Password"
-        textField.layer.cornerRadius = 5
-        textField.layer.masksToBounds = true
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.gray.cgColor
-        
-        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
-        rightView.addSubview(passwordEyeButton)
-        
-        textField.rightView = rightView
-        textField.rightViewMode = .always
         textField.delegate = self
         textField.tag = FieldTag.password.index
         return textField
     }()
     
-    private lazy var confirmPasswordTextField: UITextField = {
-        let textField = UITextField()
-        textField.innerPaddings(left: 15, right: 15)
-        textField.isSecureTextEntry = true
+    private lazy var confirmPasswordTextField: VisarioTextField = {
+        let textField = VisarioTextField(isSecure: true)
         textField.placeholder = "Confirm password"
-        textField.layer.cornerRadius = 5
-        textField.layer.masksToBounds = true
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.gray.cgColor
-        
-        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
-        rightView.addSubview(confirmPasswordEyeButton)
-        
-        textField.rightView = rightView
-        textField.rightViewMode = .always
         textField.delegate = self
         textField.tag = FieldTag.confirmPassword.index
         return textField

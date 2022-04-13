@@ -32,7 +32,7 @@ final class LoginViewController: UIViewController {
     }()
     
     private lazy var mailTextField: VisarioTextField = {
-        let mailTextField = VisarioTextField(isSecure: false)
+        let mailTextField = VisarioTextField()
         mailTextField.placeholder = "Email"
         mailTextField.delegate = self
         return mailTextField
