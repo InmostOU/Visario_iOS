@@ -8,14 +8,14 @@
 import UIKit
 
 enum TabItem: String, CaseIterable {
-    case chats = "Channels"
+    case channels = "Channels"
     case meetings = "Meetings"
     case contacts = "Contacts"
     case settings = "Settings"
     
     var viewController: UIViewController {
         switch self {
-        case .chats:
+        case .channels:
             return UINavigationController(rootViewController: ChannelsListTableViewController())
         case .meetings:
             return UINavigationController(rootViewController: StartMeetingViewController())
@@ -28,7 +28,7 @@ enum TabItem: String, CaseIterable {
     
     var icon: UIImage {
         switch self {
-        case .chats:
+        case .channels:
             return UIImage(systemName: "message.fill")!
         case .meetings:
             return UIImage(systemName: "phone.fill")!

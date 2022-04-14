@@ -204,12 +204,10 @@ class ChatViewController: MessagesViewController {
         setupMessagesCollectionView()
         configureMessageCollectionView()
         setupInputBarButtons()
-        setupAudioRecorder()
         
+        setupAudioRecorder()
         setSender()
         setupWebsocketCompletion()
-        
-        audioRecorder.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -268,6 +266,7 @@ class ChatViewController: MessagesViewController {
     
     private func setupAudioRecorder() {
         audioRecorder = AudioRecorder(messagesCollectionView: messagesCollectionView)
+        audioRecorder.delegate = self
     }
     
     private func removeMessageAvatars() {

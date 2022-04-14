@@ -101,7 +101,7 @@ final class SearchedChannelChatViewController: MessagesViewController {
             case .success(_):
                 self.view.showSuccessHUD()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.delegate.fetchAllChannels()
+                    self.delegate.refreshChannels()
                     self.navigationController?.popToRootViewController(animated: true)
                     self.delegate.searchController.isActive = false
                 }

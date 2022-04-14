@@ -97,7 +97,7 @@ final class CreateChannelTableViewController: UITableViewController {
             switch response {
             case .success(_):
                 self.channelsViewModel.newChannel = ChannelModel.placeholder
-                self.channelsListTableViewController.fetchAllChannels()
+                self.channelsListTableViewController.refreshChannels()
                 self.navigationController?.popViewController(animated: true)
             case .failure(let error):
                 self.showError(error: error)

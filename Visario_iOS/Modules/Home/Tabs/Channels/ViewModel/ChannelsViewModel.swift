@@ -33,6 +33,7 @@ final class ChannelsViewModel {
     private(set) var chatBotMessages: [KitMessage] = []
     
     var newChannel = ChannelModel.placeholder
+    var isFetchedChannelsFromServer = false
     
     weak var view: (BaseView & UIViewController)?
     
@@ -88,6 +89,7 @@ final class ChannelsViewModel {
             guard let self = self else { return }
             switch response {
             case .success(let serverChannels):
+                self.isFetchedChannelsFromServer = true
                 self.saveChannels(channels: serverChannels, callback: callback)
             case .failure(let error):
                 callback(.failure(error))

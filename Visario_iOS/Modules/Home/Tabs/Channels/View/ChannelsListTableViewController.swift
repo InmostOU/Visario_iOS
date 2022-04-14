@@ -19,7 +19,7 @@ final class ChannelsListTableViewController: UITableViewController {
     
     private lazy var channelsRefreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(fetchAllChannels), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshChannels), for: .valueChanged)
         return refreshControl
     }()
     
@@ -49,6 +49,26 @@ final class ChannelsListTableViewController: UITableViewController {
         botButton.addTarget(self, action: #selector(goToChatBotRoom), for: .touchUpInside)
         botButton.snp.makeConstraints { $0.width.height.equalTo(30) }
         return UIBarButtonItem(customView: botButton)
+    }()
+    
+    private lazy var titleStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = 10
+        return stackView
+    }()
+    
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.text = "Channels"
+        return label
+    }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.tintColor = .orange
+        indicator.startAnimating()
+        return indicator
     }()
     
     // MARK: - Lifecycle
@@ -123,18 +143,21 @@ final class ChannelsListTableViewController: UITableViewController {
     }
     
     private func getChannels() {
-        view.showRotationHUD()
+        startSpinner()
         getAllChannels()
     }
     
     private func getAllChannels() {
+        channelsViewModel.isFetchedChannelsFromServer = false
         channelsViewModel.getAllChannels { [weak self] response in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.channelsRefreshControl.endRefreshing()
                 switch response {
                 case .success:
-                    self.view.hideHUD()
+                    if self.channelsViewModel.isFetchedChannelsFromServer {
+                        self.stopSpinner()
+                    }
                     self.tableView.reloadData()
                     self.websocketCompletion()
                 case .failure:
@@ -151,7 +174,8 @@ final class ChannelsListTableViewController: UITableViewController {
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = TabItem.chats.title
+        titleStackView.addArrangedSubviews(titleLabel, activityIndicator)
+        navigationItem.titleView = titleStackView
         navigationItem.rightBarButtonItems = [createChannelBarButton, spacer, botBarButton]
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -173,6 +197,19 @@ final class ChannelsListTableViewController: UITableViewController {
         tableView.refreshControl = channelsRefreshControl
     }
     
+    private func startSpinner() {
+        activityIndicator.alpha = 1
+        activityIndicator.startAnimating()
+    }
+    
+    private func stopSpinner() {
+        UIView.animate(withDuration: 0.3) {
+            self.activityIndicator.alpha = 0
+            self.activityIndicator.stopAnimating()
+            self.titleStackView.layoutIfNeeded()
+        }
+    }
+    
     // MARK: - Actions
     
     @objc private func createBarButtonTapped() {
@@ -185,7 +222,7 @@ final class ChannelsListTableViewController: UITableViewController {
         navigationController?.pushViewController(chatBotRoomViewController, animated: true)
     }
     
-    @objc func fetchAllChannels() {
+    @objc func refreshChannels() {
         getAllChannels()
     }
 }

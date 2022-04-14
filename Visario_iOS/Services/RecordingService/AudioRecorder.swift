@@ -39,7 +39,6 @@ enum AudioRecodingState {
 }
 
 protocol AudioRecorderDelegate: AnyObject {
-    //func microphonePermissionState(state: AVAudioSession.RecordPermission)
     func audioRecorder(didUpdateDecibel decibel: Float)
 }
 
@@ -101,7 +100,7 @@ final class AudioRecorder: NSObject {
             try recordingSession.setCategory(.playAndRecord, mode: .default)
             try recordingSession.overrideOutputAudioPort(.speaker)
             try recordingSession.setActive(true)
-            recordingSession.requestRecordPermission() { [unowned self] allowed in
+            recordingSession.requestRecordPermission() { allowed in
                 DispatchQueue.main.async {
                     if allowed {
                         // self.loadRecordingUI()
