@@ -31,6 +31,7 @@ final class SettingsViewModel {
     
     func logout() {
         KeyChainStorage.shared.deleteAccessToken()
+        KeyChainStorage.shared.deleteUserProfile()
         let loginNavigationController = UINavigationController(rootViewController: LoginViewController())
         UIApplication.shared.window?.rootViewController = loginNavigationController
     }

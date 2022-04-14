@@ -110,12 +110,6 @@ final class ChannelsViewModel {
         }
     }
     
-    private func saveChannelsToProfile(channels: [ChannelWithMessagesModel]) {
-        guard var profile = KeyChainStorage.shared.getProfile() else { return }
-        profile.channels = channels.map(\.channelArn)
-        KeyChainStorage.shared.saveProfile(profile: profile)
-    }
-    
     private func removeChannelArnFromLocalProfile(channelArn: String) {
         guard var profile = KeyChainStorage.shared.getProfile() else { return }
         profile.channels?.removeAll(where: { $0 == channelArn })
@@ -150,6 +144,12 @@ final class ChannelsViewModel {
         channels = fetchedChannels
         saveChannelsToProfile(channels: fetchedChannels)
         coreDataService.saveChannels(channels: fetchedChannels, callback: callback)
+    }
+    
+    private func saveChannelsToProfile(channels: [ChannelWithMessagesModel]) {
+        guard var profile = KeyChainStorage.shared.getProfile() else { return }
+        profile.channels = channels.map(\.channelArn)
+        KeyChainStorage.shared.saveProfile(profile: profile)
     }
     
     func createChannel(callback: @escaping VoidCallback) {

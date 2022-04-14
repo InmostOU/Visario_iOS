@@ -59,6 +59,7 @@ final class AuthenticationService {
                         callback(.failure(NetworkError.errorDecode))
                         return
                     }
+                    userProfile.channels = KeyChainStorage.shared.getProfile()?.channels
                     userProfile.password = password
                     KeyChainStorage.shared.saveProfile(profile: userProfile)
                     KeyChainStorage.shared.saveAccessToken(token: token)
