@@ -61,15 +61,15 @@ final class ChannelsListTableViewController: UITableViewController {
         setupTableView()
         setupWebSocket()
         setupObservers()
-        getData()
-        getCtatBotMessages()
+        getChannels()
+        getChatBotMessages()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        ConnectivityManager.shared.addListener(listener: self)
         tableView.reloadData()
+        ConnectivityManager.shared.addListener(listener: self)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -115,14 +115,14 @@ final class ChannelsListTableViewController: UITableViewController {
             switch appState {
             case .foreground:
                 self.setupWebSocket()
-                self.getData()
+                self.getChannels()
             case .background:
                 break
             }
         }
     }
     
-    private func getData() {
+    private func getChannels() {
         view.showRotationHUD()
         getAllChannels()
     }
@@ -144,7 +144,7 @@ final class ChannelsListTableViewController: UITableViewController {
         }
     }
     
-    private func getCtatBotMessages() {
+    private func getChatBotMessages() {
         channelsViewModel.getChatBotMessages { response in
             
         }
